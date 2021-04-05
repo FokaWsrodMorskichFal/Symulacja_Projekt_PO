@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,12 +30,38 @@ public class mainFrame extends JFrame implements ActionListener{
 	int ktory_subFrame;
 	ArrayList<subFrame> subFrameList;
 	NumberFormatException exception;
+	subFrame sf;
 	
 	public mainFrame() {
 		this.setSize(new Dimension(1000, 700));
 		this.setLayout(new BorderLayout());
-		this.setTitle("Symulacja ruchu cia≥ pod wp≥ywem si≥y centralnej");
+		this.setTitle("Symulacja ruchu cia≈Ç pod wp≈Çywem si≈Çy centralnej");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {}
+		});
 		this.subFrameList = new ArrayList<subFrame>();
 		exception = new NumberFormatException();
 		
@@ -48,7 +76,7 @@ public class mainFrame extends JFrame implements ActionListener{
 		
 		JPanel pytanie = new JPanel();
 		pytanie.setPreferredSize(new Dimension(250, 20));
-		JLabel pyt = new JLabel("Wpisz liczbÍ cia≥:");
+		JLabel pyt = new JLabel("Wpisz liczbƒô cia≈Ç:");
 		pytanie.add(pyt);
 		
 		prawy1.add(pytanie);
@@ -64,7 +92,7 @@ public class mainFrame extends JFrame implements ActionListener{
 		
 		JButton dalej = new JButton("Dalej");
 		dalej.setPreferredSize(new Dimension(80, 25));
-		JButton koniec = new JButton("ZakoÒcz");
+		JButton koniec = new JButton("Zako≈Ñcz");
 		koniec.setPreferredSize(new Dimension(100, 25));
 		dalej.addActionListener(new ActionListener() {
 			
@@ -75,12 +103,39 @@ public class mainFrame extends JFrame implements ActionListener{
 				     if(l_cial==0) {
 				    	 throw exception;
 				     }
-				     subFrame sf = new subFrame(0, l_cial);
+				     sf = new subFrame(0, l_cial);
+				     sf.addWindowListener(new WindowListener() {
+						
+						@Override
+						public void windowOpened(WindowEvent e) {
+							dalej.setEnabled(false);
+						    koniec.setEnabled(false);
+						    odpow.setEnabled(false);
+						}
+						
+						@Override
+						public void windowIconified(WindowEvent e) {}
+						
+						@Override
+						public void windowDeiconified(WindowEvent e) {}
+						
+						@Override
+						public void windowDeactivated(WindowEvent e) {}
+						
+						@Override
+						public void windowClosing(WindowEvent e) {
+							dalej.setEnabled(true);
+						    koniec.setEnabled(true);
+						    odpow.setEnabled(true);
+						}
+						
+						@Override
+						public void windowClosed(WindowEvent e) {}
+						
+						@Override
+						public void windowActivated(WindowEvent e) {}
+					});
 				     sf.setVisible(true);
-				     dalej.setEnabled(false);
-				     koniec.setEnabled(false);
-				     odpow.setEnabled(false);
-				     
 				}
 				catch(NumberFormatException exception){
 				     System.out.println("Wrong number format.");
@@ -142,7 +197,7 @@ public class mainFrame extends JFrame implements ActionListener{
 		});
 		menu.add(menuItem3);
 		
-		/* åRODKOWA GRAFIKA */
+		/* ≈öRODKOWA GRAFIKA */
 		
 		tlo tlo = new tlo();
 		tlo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3, true));
