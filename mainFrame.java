@@ -130,7 +130,14 @@ public class mainFrame extends JFrame implements ActionListener{
 						}
 						
 						@Override
-						public void windowClosed(WindowEvent e) {}
+						public void windowClosed(WindowEvent e) {
+							dalej.setEnabled(true);
+						    koniec.setEnabled(true);
+						    odpow.setEnabled(true);
+						    if(sf.j==l_cial-1) {
+						    	dispose();
+						    }
+						}
 						
 						@Override
 						public void windowActivated(WindowEvent e) {}
