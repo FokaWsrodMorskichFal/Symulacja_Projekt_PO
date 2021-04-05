@@ -29,10 +29,12 @@ public class subFrame extends JFrame {
 	public subFrame(int kolej, int l_cial) {
 		this.setSize(new Dimension(300, 450));
 		this.setLayout(new GridLayout(9 ,1));
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Parametry");
 		
 		panelList = new ArrayList<JPanel>();
 		liczebniki = new ArrayList<String>();
+		listBody = new ArrayList<Body>();
 		
 		j=kolej;
 		this.l_cial=l_cial;
@@ -51,9 +53,7 @@ public class subFrame extends JFrame {
 		liczebniki.add("siudmego");
 		liczebniki.add("ósmego");
 		
-		//JPanel param = new JPanel();
 		JLabel parametry = new JLabel("Podaj parametry "+liczebniki.get(j)+" ciała:", JLabel.CENTER);
-		//param.add(parametry);
 		panelList.get(0).add(parametry);
 		
 		JLabel nazwa = new JLabel("Nazwa:", JLabel.CENTER);
@@ -129,36 +129,30 @@ public class subFrame extends JFrame {
 		ActionListener nextListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-			
-			try{	
-				listBody.add(
-						new	Body(pole_nazwy.getText(), Double.valueOf(pole_wagi.getText()), kol, Integer.valueOf(pole_wsp_X.getText()),
-							Integer.valueOf(pole_wsp_Y.getText()) ,Double.valueOf(pole_pred_X.getText()), Double.valueOf(pole_pred_Y.getText()), j)
-					);
-			}
-			
-			catch(NumberFormatException exception){
-			     JOptionPane.showMessageDialog(null, "Zły format parametrów!","Błąd!",JOptionPane.ERROR_MESSAGE);
-			     j--;
-			}
+				try{	
+					listBody.add(
+							new	Body(pole_nazwy.getText(), Double.valueOf(pole_wagi.getText()), kol, Integer.valueOf(pole_wsp_X.getText()),
+								Integer.valueOf(pole_wsp_Y.getText()) ,Double.valueOf(pole_pred_X.getText()), Double.valueOf(pole_pred_Y.getText()), j)
+						);
+					if(j < l_cial - 1) {
+						j++;
+						pole_nazwy.setText("Obiekt "+String.format("%d", j+1));
+						pole_wagi.setText(null);
+						pole_wsp_X.setText(null);
+						pole_wsp_Y.setText(null);
+						pole_pred_X.setText(null);
+						pole_pred_Y.setText(null);
+						parametry.setText("Podaj parametry "+liczebniki.get(j)+" ciała:");
+					}else {
+						//stworzyć calc (background worker), który dostaje liste listBody
+						//stworzyć simFrame
+						dispose();
+					}
+				}
 				
-		
-			if(j < l_cial - 1) {
-				
-				pole_nazwy.setText(null);
-				pole_wagi.setText(null);
-				pole_wsp_X.setText(null);
-				pole_wsp_Y.setText(null);
-				pole_pred_X.setText(null);
-				pole_pred_Y.setText(null);
-				j++;
-				System.out.println(j);
-			}
-				
-			else {
-				
-			}	
-				
+				catch(NumberFormatException exception){
+				     JOptionPane.showMessageDialog(null, "Zły format parametrów!","Błąd!",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		};
 		dalej.addActionListener(nextListener);
@@ -170,26 +164,3 @@ public class subFrame extends JFrame {
 		this.add(guziki);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
