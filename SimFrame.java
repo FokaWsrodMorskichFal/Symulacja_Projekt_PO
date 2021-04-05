@@ -62,9 +62,7 @@ public class SimFrame extends JFrame {
 		this.setSize(new Dimension(1000, 700));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Symulacja ruchu cia³‚ pod wp³ywem si³y centralnej");
-		
-		
-		System.out.println("Siema");
+
 		
 		// 		MENU 		//
 		
