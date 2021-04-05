@@ -16,7 +16,7 @@ public class Body {
 	public Body(String n, double m, Color c, int xx, int yy, double vxx, double vyy, int j) {
 		
 		if(n == null) {
-			name = "Obiekt" + Integer.toString(j);
+			name = "Obiekt" + Integer.toString(j+1);
 			
 		}
 		else
@@ -26,7 +26,7 @@ public class Body {
 		
 		if(c == null) {
 			
-			color = new Color(j*20, j*20, j*20);
+			color = new Color((j+1)*20, (j+1)*20, (j+1)*20);
 		
 		}
 		else
