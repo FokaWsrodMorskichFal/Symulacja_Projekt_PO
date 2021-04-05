@@ -1,0 +1,37 @@
+JButton dalej = new JButton("Dalej");
+		ActionListener nextListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+			
+			try{	
+				listBody.add(
+						new	Body(pole_nazwy.getText(), Double.valueOf(pole_wagi.getText()), kol, Integer.valueOf(pole_wsp_X.getText()),
+							Integer.valueOf(pole_wsp_Y.getText()) ,Double.valueOf(pole_pred_X.getText()), Double.valueOf(pole_pred_Y.getText()), j)
+					);
+			}
+			
+			catch(NumberFormatException exception){
+			     JOptionPane.showMessageDialog(null, "Zły format parametrów!","Błąd!",JOptionPane.ERROR_MESSAGE);
+			     j--;
+			}
+				
+		
+			if(j < l_cial - 1) {
+				
+				pole_nazwy.setText(null);
+				pole_wagi.setText(null);
+				pole_wsp_X.setText(null);
+				pole_wsp_Y.setText(null);
+				pole_pred_X.setText(null);
+				pole_pred_Y.setText(null);
+				j++;
+				System.out.println(j);
+			}
+				
+			else {
+				
+			}	
+				
+			}
+		};
+		dalej.addActionListener(nextListener);
