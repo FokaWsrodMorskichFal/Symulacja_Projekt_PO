@@ -3,8 +3,6 @@ package projekt.symulacja;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GraphicsConfiguration;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -25,7 +23,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
+
 
 public class SimFrame extends JFrame {
 	
@@ -120,7 +118,7 @@ public class SimFrame extends JFrame {
 		menuPanel.setBorder(BorderFactory.createLineBorder(Color.white, 3, true));
 		
 		bodies = new JComboBox(bodyString);
-		bodies.setEditable(true);
+		//bodies.setEditable(true);
 		
 	
 		
@@ -260,7 +258,7 @@ public class SimFrame extends JFrame {
 		glMain.setHgap(1);
 		glMain.setVgap(1);
 		menuPanel.setLayout(glMain);
-		//menuPanel.setLayout(new GridBagLayout());
+		
 		
 		
 		this.add(spacePanel, BorderLayout.CENTER);
