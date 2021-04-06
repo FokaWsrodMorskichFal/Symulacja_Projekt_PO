@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -51,9 +52,9 @@ public class SimFrame extends JFrame {
 	
 	JCheckBox checkBox;
 	
-	JPanel spacePanel;
+	SimulatePanel spacePanel;
 	JPanel menuPanel;
-	JPanel startExitButtons;
+	JPanel panelButtons;
 	
 	JMenuBar menuBar;
 	JMenu menu;
@@ -61,12 +62,12 @@ public class SimFrame extends JFrame {
 	JMenuItem save;
 	JMenuItem neww;
 	
-	GridLayout glButtons = new GridLayout(1,2);
+	GridBagConstraints glButtons = new GridBagConstraints();
 	GridLayout glMain = new GridLayout(12,1);
 	
 	public SimFrame(ArrayList<Body> bodyList) throws HeadlessException {
 		
-		this.setSize(new Dimension(1000, 700));
+		this.setSize(new Dimension(1024, 768));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Symulacja ruchu cia³‚ pod wp³ywem si³y centralnej");
 
@@ -112,10 +113,11 @@ public class SimFrame extends JFrame {
 		}
 		
 		
-		spacePanel = new JPanel();
-		spacePanel.setBackground(Color.white);
+		spacePanel = new SimulatePanel(bodyList);
+		
 		
 		menuPanel = new JPanel();
+		menuPanel.setBorder(BorderFactory.createLineBorder(Color.white, 3, true));
 		
 		bodies = new JComboBox(bodyString);
 		bodies.setEditable(true);
@@ -194,7 +196,7 @@ public class SimFrame extends JFrame {
 		
 		addSatelite = new JButton("Dodaj satelitê");
 		
-		menuPanel.add(addSatelite);
+		//menuPanel.add(addSatelite);
 		
 		start = new JButton("Start");
 		ActionListener startListener = new ActionListener() {
@@ -229,19 +231,34 @@ public class SimFrame extends JFrame {
 		};
 		exit.addActionListener(exitListener);
 		
-		startExitButtons = new JPanel();
+		panelButtons = new JPanel();
+		panelButtons.setLayout(new GridBagLayout());
 		
-		startExitButtons.add(start);
-		startExitButtons.add(exit);
+		glButtons.insets = new Insets(2,2,2,2);
 		
-		glButtons.setVgap(2);
-		glButtons.setHgap(2);
-		startExitButtons.setLayout(glButtons);
+		glButtons.gridx = 0;
+		glButtons.gridy = 0;
+		glButtons.gridwidth = 2;
+		glButtons.fill = GridBagConstraints.HORIZONTAL;
+		panelButtons.add(addSatelite, glButtons);
 		
-		menuPanel.add(startExitButtons);
+		glButtons.gridx = 0;
+		glButtons.gridy = 1;
+		glButtons.gridwidth = 1;
+		panelButtons.add(start, glButtons);
 		
-		glMain.setHgap(2);
-		glMain.setVgap(2);
+		glButtons.gridx = 1;
+		glButtons.gridy = 1;
+		glButtons.gridwidth = 1;
+		panelButtons.add(exit, glButtons);
+		
+		
+	
+		
+		menuPanel.add(panelButtons);
+		
+		glMain.setHgap(1);
+		glMain.setVgap(1);
 		menuPanel.setLayout(glMain);
 		//menuPanel.setLayout(new GridBagLayout());
 		
