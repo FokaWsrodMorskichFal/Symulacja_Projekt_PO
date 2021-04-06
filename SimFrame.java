@@ -3,9 +3,13 @@ package projekt.symulacja;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GraphicsConfiguration;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -24,9 +28,9 @@ import javax.swing.SwingUtilities;
 
 public class SimFrame extends JFrame {
 	
-	static final int SLIDER_MIN = 3; // ????
-	static final int SLIDER_MAX = 33;
-	static final int SLIDER_INIT = 3;
+	static final int SLIDER_MIN = 1; // ????
+	static final int SLIDER_MAX = 4;
+	static final int SLIDER_INIT = 1;
 
 	JComboBox bodies;
 	
@@ -37,6 +41,7 @@ public class SimFrame extends JFrame {
 	JLabel yy;
 	JLabel vxx;
 	JLabel vyy;
+	JLabel sliderLabel;
 	
 	JButton addSatelite;
 	JButton start;
@@ -48,6 +53,7 @@ public class SimFrame extends JFrame {
 	
 	JPanel spacePanel;
 	JPanel menuPanel;
+	JPanel startExitButtons;
 	
 	JMenuBar menuBar;
 	JMenu menu;
@@ -55,7 +61,8 @@ public class SimFrame extends JFrame {
 	JMenuItem save;
 	JMenuItem neww;
 	
-	
+	GridLayout glButtons = new GridLayout(1,2);
+	GridLayout glMain = new GridLayout(12,1);
 	
 	public SimFrame(ArrayList<Body> bodyList) throws HeadlessException {
 		
@@ -73,13 +80,7 @@ public class SimFrame extends JFrame {
 		menuBar.add(menu);
 		
 		load = new JMenuItem("Wczytaj");
-		load.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
+		load.setEnabled(false);
 		menu.add(load);
 		
 		save = new JMenuItem("Zapisz");
@@ -101,7 +102,7 @@ public class SimFrame extends JFrame {
 			} 
 		});
 		menu.add(neww);
-		
+		// 			KONIEC MENU		 	//
 		
 		bodyString = new String[bodyList.size()];
 		
@@ -118,6 +119,8 @@ public class SimFrame extends JFrame {
 		
 		bodies = new JComboBox(bodyString);
 		bodies.setEditable(true);
+		
+	
 		
 		for(int i = 0; i < bodyList.size(); i++) {
 			
@@ -152,30 +155,95 @@ public class SimFrame extends JFrame {
 			}
 		};
 		bodies.addActionListener(changelistener);
+		
+		
 		menuPanel.add(bodies);
 		
+	
 		menuPanel.add(mass);
+		
+		
 		menuPanel.add(xx);
+		
+		
 		menuPanel.add(yy);
+		
+		
 		menuPanel.add(vxx);
+		
+		
 		menuPanel.add(vyy);
 		
+		
 		checkBox = new JCheckBox("Poka¿ drogê");
+		
 		menuPanel.add(checkBox);
 		
+		sliderLabel = new JLabel("Prêdkoœæ symulacji:");
+		sliderLabel.setSize(2, 50);
+		menuPanel.add(sliderLabel);
+		
+		
 		timeSlider = new JSlider(JSlider.HORIZONTAL, SLIDER_MIN, SLIDER_MAX, SLIDER_INIT);
+		timeSlider.setMajorTickSpacing(1);
+		timeSlider.setPaintTicks(true);
+		timeSlider.setPaintLabels(true);
+		
+		
 		menuPanel.add(timeSlider);
 		
 		addSatelite = new JButton("Dodaj satelitê");
+		
 		menuPanel.add(addSatelite);
 		
 		start = new JButton("Start");
-		menuPanel.add(start);
+		ActionListener startListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				 
+				int j = 0;
+				
+				if(start.getText() == "Start") {
+					
+					start.setText("Stop");
+					j++;
+				}
+				
+				if(start.getText() == "Stop" && j == 0) {
+					
+					start.setText("Start");
+				}
+				
+			}
+		};
+		start.addActionListener(startListener);
+		
 		
 		exit = new JButton("Zakoñcz");
-		menuPanel.add(exit);
+		ActionListener exitListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				System.exit(0); 
+			}
+		};
+		exit.addActionListener(exitListener);
 		
-		menuPanel.setLayout(new GridLayout(11,1));
+		startExitButtons = new JPanel();
+		
+		startExitButtons.add(start);
+		startExitButtons.add(exit);
+		
+		glButtons.setVgap(2);
+		glButtons.setHgap(2);
+		startExitButtons.setLayout(glButtons);
+		
+		menuPanel.add(startExitButtons);
+		
+		glMain.setHgap(2);
+		glMain.setVgap(2);
+		menuPanel.setLayout(glMain);
+		//menuPanel.setLayout(new GridBagLayout());
 		
 		
 		this.add(spacePanel, BorderLayout.CENTER);
