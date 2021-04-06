@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -26,17 +25,20 @@ import javax.swing.SwingUtilities;
 public class mainFrame extends JFrame implements ActionListener{
 
 	JTextField odpow;
+	JTextField odpow_wzor;
 	int l_cial;
-	int ktory_subFrame;
-	ArrayList<subFrame> subFrameList;
 	NumberFormatException exception;
 	subFrame sf;
+	JPanel prawy;
+	JFrame to;
+	JPanel prawy1;
 	
 	public mainFrame() {
 		this.setSize(new Dimension(1000, 700));
 		this.setLayout(new BorderLayout());
 		this.setTitle("Symulacja ruchu ciał pod wpływem siły centralnej");
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		to=this;
 		this.addWindowListener(new WindowListener() {
 			
 			@Override
@@ -62,16 +64,16 @@ public class mainFrame extends JFrame implements ActionListener{
 			@Override
 			public void windowActivated(WindowEvent e) {}
 		});
-		this.subFrameList = new ArrayList<subFrame>();
+		
 		exception = new NumberFormatException();
 		
 		/* PRAWY PANEL */
 		
-		JPanel prawy = new JPanel();
+		prawy = new JPanel();
 		prawy.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3, true));
-		prawy.setLayout(new GridLayout(5, 1));
+		prawy.setLayout(new GridLayout(4, 1));
 		
-		JPanel prawy1 = new JPanel();
+		prawy1 = new JPanel();
 		prawy1.setLayout(new BoxLayout(prawy1, BoxLayout.Y_AXIS));
 		
 		JPanel pytanie = new JPanel();
@@ -87,6 +89,18 @@ public class mainFrame extends JFrame implements ActionListener{
 		odpowiedz.add(odpow);
 		prawy1.add(odpowiedz);
 		
+		JPanel wzor = new JPanel();
+		JLabel wzor_sily = new JLabel("Wpisz wzór na siłę:");
+		wzor.add(wzor_sily);
+		
+		prawy1.add(wzor);
+		
+		JPanel odpow_sily = new JPanel();
+		odpow_wzor = new JTextField();
+		odpow_wzor.setPreferredSize(new Dimension(230, 25));
+		odpow_sily.add(odpow_wzor);
+		prawy1.add(odpow_sily);
+		
 		JPanel guziki = new JPanel();
 		guziki.setLayout(new FlowLayout());
 		
@@ -100,8 +114,27 @@ public class mainFrame extends JFrame implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				try{
 				     l_cial = Integer.parseInt(odpow.getText());
-				     if(l_cial==0) {
+				     if(l_cial<1 || l_cial>8) {
 				    	 throw exception;
+				     }
+				     String tmp = odpow_wzor.getText();
+				     if(tmp.isEmpty()) {
+				    	 System.out.println("ELO");
+				    	 throw exception;
+				     }else{
+				    	 int i=0;
+					     String znaki = "+-/*^r0123456789";
+					     for(int k=0; k<tmp.length();k++){
+					    	 int counter= 0;
+					    	 for(int j=0;j<16;j++){
+					    		 if(tmp.charAt(i)!=znaki.charAt(j)) {
+					    			 counter++;
+					    		 }
+					    	 }
+					    	 if(counter==16) {
+					    		 throw exception;
+					    	 }
+					     } 
 				     }
 				     sf = new subFrame(0, l_cial);
 				     sf.addWindowListener(new WindowListener() {
@@ -111,6 +144,7 @@ public class mainFrame extends JFrame implements ActionListener{
 							dalej.setEnabled(false);
 						    koniec.setEnabled(false);
 						    odpow.setEnabled(false);
+						    odpow_wzor.setEnabled(false);
 						}
 						
 						@Override
@@ -127,6 +161,7 @@ public class mainFrame extends JFrame implements ActionListener{
 							dalej.setEnabled(true);
 						    koniec.setEnabled(true);
 						    odpow.setEnabled(true);
+						    odpow_wzor.setEnabled(true);
 						}
 						
 						@Override
@@ -134,8 +169,11 @@ public class mainFrame extends JFrame implements ActionListener{
 							dalej.setEnabled(true);
 						    koniec.setEnabled(true);
 						    odpow.setEnabled(true);
+						    odpow_wzor.setEnabled(true);
 						    if(sf.j==l_cial-1) {
-						    	dispose();
+						    	to.dispose();
+						    	to = new SimFrame(sf.listBody);
+						    	to.setVisible(true);
 						    }
 						}
 						
@@ -145,7 +183,7 @@ public class mainFrame extends JFrame implements ActionListener{
 				     sf.setVisible(true);
 				}
 				catch(NumberFormatException exception){
-				     System.out.println("Wrong number format.");
+				     System.out.println("Niepoprawna liczba ciał lub wyrażenie na siłę. Wyrażenie na siłę powinno zawierać tylko liczby, znaki matematyczne oraz zmienną r, a liczba ciał musi być z zakresu (1-8).");
 				}
 			}
 		});
@@ -157,12 +195,12 @@ public class mainFrame extends JFrame implements ActionListener{
 		guziki.add(koniec);
 		prawy1.add(guziki);
 		
-		JPanel prawy2 = new JPanel();
-		JPanel prawy3 = new JPanel();
+		//JPanel prawy2 = new JPanel();
+		//JPanel prawy3 = new JPanel();
 		
 		prawy.add(prawy1);
-		prawy.add(prawy2);
-		prawy.add(prawy3);
+		//prawy.add(prawy2);
+		//prawy.add(prawy3);
 		
 		this.add(prawy, BorderLayout.LINE_END);
 		
@@ -184,6 +222,7 @@ public class mainFrame extends JFrame implements ActionListener{
 		});
 		menu.add(menuItem1);
 		
+		
 		JMenuItem menuItem2 = new JMenuItem("Zapisz");
 		menuItem2.addActionListener(new ActionListener() {
 			
@@ -192,17 +231,20 @@ public class mainFrame extends JFrame implements ActionListener{
 				
 			} 
 		});
+		menuItem2.setEnabled(false);
 		menu.add(menuItem2);
 		
 		JMenuItem menuItem3 = new JMenuItem("Nowe");
-		menuItem2.addActionListener(new ActionListener() {
+		menuItem3.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 			} 
 		});
+		menuItem3.setEnabled(false);
 		menu.add(menuItem3);
+		
 		
 		/* ŚRODKOWA GRAFIKA */
 		
@@ -225,7 +267,6 @@ public class mainFrame extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
