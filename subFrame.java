@@ -25,6 +25,7 @@ public class subFrame extends JFrame {
 	int j;
 	int l_cial;
 	Color kol;
+	Calculus calc;
 	
 	public subFrame(int kolej, int l_cial) {
 		this.setSize(new Dimension(300, 450));
@@ -145,7 +146,7 @@ public class subFrame extends JFrame {
 						parametry.setText("Podaj parametry "+liczebniki.get(j)+" ciała:");
 					}else {
 						//stworzyć calc (background worker), który dostaje liste listBody
-						//stworzyć simFrame
+						calc = new Calculus(listBody);
 						dispose();
 					}
 				}
@@ -164,3 +165,27 @@ public class subFrame extends JFrame {
 		this.add(guziki);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
