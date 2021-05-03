@@ -8,13 +8,7 @@ public class Calculus extends Thread {
 	public ArrayList<Body> bodyList;
 	
 	public Calculus(ArrayList<Body> constructor_list) {
-		pointList = new ArrayList<Point>();
-		bodyList = new ArrayList<Body>();
-		
-		bodyList=constructor_list;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println("ELO");
+		pointList = new ArrayList<Point>(); 	//historia pozycji cia³
+		bodyList = new ArrayList<Body>();		//lista ze stanem cia³
 	}
 }
