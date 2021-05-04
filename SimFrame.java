@@ -1,4 +1,4 @@
-package projekt.symulacja;
+package mainPack;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,8 +10,9 @@ import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -23,13 +24,19 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-
-public class SimFrame extends JFrame {
+@SuppressWarnings("serial")
+public class SimFrame extends JFrame implements Runnable {
 	
-	static final int SLIDER_MIN = 1; // ????
-	static final int SLIDER_MAX = 4;
-	static final int SLIDER_INIT = 1;
+	static final int SLIDER_MIN = 1;
+	static final int SLIDER_MAX = 5;
+	static final int SLIDER_INIT = 3;
+	
+	
+	
+	int stan_slider;
 
 	JComboBox bodies;
 	
@@ -63,12 +70,12 @@ public class SimFrame extends JFrame {
 	GridBagConstraints glButtons = new GridBagConstraints();
 	GridLayout glMain = new GridLayout(12,1);
 	
-	public SimFrame(ArrayList<Body> bodyList) throws HeadlessException {
+	public SimFrame(ArrayList<Body> bodyList, ArrayList<Double> coefficientsList) throws HeadlessException {
 		
-		this.setSize(new Dimension(1024, 768));
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setTitle("Symulacja ruchu cia≥Ç pod wp≥ywem si≥y centralnej");
-
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setSize(new Dimension(1624, 1000));
+		this.setTitle("Symulacja ruchu cia≈Ç‚Äö pod wp≈Çywem si≈Çy centralnej");
+		stan_slider=2;
 		
 		// 		MENU 		//
 		
@@ -87,7 +94,7 @@ public class SimFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				//zapis do pliku poczƒÖtkowego stanu cia≈Ç
 			} 
 		});
 		menu.add(save);
@@ -97,7 +104,7 @@ public class SimFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				//przej≈õcie do poczƒÖtkowego MainFrame i program zaczyna dzia≈Çaƒá na nowo
 			} 
 		});
 		menu.add(neww);
@@ -111,16 +118,19 @@ public class SimFrame extends JFrame {
 		}
 		
 		
-		spacePanel = new SimulatePanel(bodyList);
+		spacePanel = new SimulatePanel(bodyList, coefficientsList);
+		Thread t = new Thread(spacePanel);
+		t.start();
+		t.suspend();
 		
+		Thread t2 = new Thread(this);
+		t2.start();
+		t2.suspend();
 		
 		menuPanel = new JPanel();
 		menuPanel.setBorder(BorderFactory.createLineBorder(Color.white, 3, true));
 		
 		bodies = new JComboBox(bodyString);
-		//bodies.setEditable(true);
-		
-	
 		
 		for(int i = 0; i < bodyList.size(); i++) {
 			
@@ -129,8 +139,8 @@ public class SimFrame extends JFrame {
 				mass = new JLabel("Waga: " + bodyList.get(i).getMass());
 				xx = new JLabel("X: "+ bodyList.get(i).getX());
 				yy = new JLabel("Y: " + bodyList.get(i).getY());
-				vxx = new JLabel("Vy: " + bodyList.get(i).getVx());
-				vyy = new JLabel("Vx: " + bodyList.get(i).getVy());
+				vxx = new JLabel("Vx: " + bodyList.get(i).getVx());
+				vyy = new JLabel("Vy: " + bodyList.get(i).getVy());
 				
 			}
 		
@@ -142,13 +152,13 @@ public class SimFrame extends JFrame {
 				
 				for(int i = 0; i < bodyList.size(); i++) {
 					
-					if(bodies.getSelectedItem() == bodyList.get(i).getName()) {
+					if(bodies.getSelectedItem() == spacePanel.listBody.get(i).getName()) {
 					
-						mass.setText("Waga: " + bodyList.get(i).getMass()); 
-						xx.setText("X: "+ bodyList.get(i).getX()); 
-						yy.setText("Y: " + bodyList.get(i).getY());
-						vxx.setText("Vy: " + bodyList.get(i).getVx()); 
-						vyy.setText("Vx: " + bodyList.get(i).getVy());
+						mass.setText("Waga: " + spacePanel.listBody.get(i).getMass()); 
+						xx.setText("X: "+ spacePanel.listBody.get(i).getX()); 
+						yy.setText("Y: " + spacePanel.listBody.get(i).getY());
+						vxx.setText("Vy: " + spacePanel.listBody.get(i).getVx()); 
+						vyy.setText("Vx: " + spacePanel.listBody.get(i).getVy());
 						
 					}
 				}
@@ -175,11 +185,11 @@ public class SimFrame extends JFrame {
 		menuPanel.add(vyy);
 		
 		
-		checkBox = new JCheckBox("Pokaø drogÍ");
+		checkBox = new JCheckBox("Poka≈º drogƒô");
 		
 		menuPanel.add(checkBox);
 		
-		sliderLabel = new JLabel("PrÍdkoúÊ symulacji:");
+		sliderLabel = new JLabel("Prƒôdko≈õƒá symulacji:");
 		sliderLabel.setSize(2, 50);
 		menuPanel.add(sliderLabel);
 		
@@ -188,11 +198,86 @@ public class SimFrame extends JFrame {
 		timeSlider.setMajorTickSpacing(1);
 		timeSlider.setPaintTicks(true);
 		timeSlider.setPaintLabels(true);
+		timeSlider.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				stan_slider=timeSlider.getValue();
+				spacePanel.aktual(stan_slider);
+			}
+		});
 		
 		
 		menuPanel.add(timeSlider);
 		
-		addSatelite = new JButton("Dodaj satelitÍ");
+		addSatelite = new JButton("Dodaj satelitƒô");
+		addSatelite.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 
+				 t.suspend();
+				 start.setText("Start");
+				 SubFrame satframe = new SubFrame(0,1);
+				 satframe.pole_nazwy.setText("SAT"+ (spacePanel.satList.size()+1));
+				 satframe.setVisible(true);
+				 
+				 satframe.addWindowListener(new WindowListener() {
+					
+					@Override
+					public void windowOpened(WindowEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void windowIconified(WindowEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void windowDeiconified(WindowEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void windowDeactivated(WindowEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void windowClosing(WindowEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void windowClosed(WindowEvent e) {
+						if(satframe.j == 1) {
+							System.out.println("SesE");
+							
+						spacePanel.satList.add(
+								new	Body(satframe.pole_nazwy.getText(), Double.valueOf(satframe.pole_wagi.getText()), 
+										Double.valueOf(satframe.pole_≈Çadunku.getText()), satframe.kol, Integer.valueOf(satframe.pole_wsp_X.getText()),
+										Integer.valueOf(satframe.pole_wsp_Y.getText()) ,Double.valueOf(satframe.pole_pred_X.getText()), Double.valueOf(satframe.pole_pred_Y.getText()), satframe.j)
+								);
+							
+							repaint();
+						}	
+					}
+					
+					@Override
+					public void windowActivated(WindowEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				
+			}
+		});
 		
 		//menuPanel.add(addSatelite);
 		
@@ -200,17 +285,23 @@ public class SimFrame extends JFrame {
 		ActionListener startListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				 
+				
 				int j = 0;
 				
 				if(start.getText() == "Start") {
 					
+					
+					t.resume();
+					t2.resume();
 					start.setText("Stop");
 					j++;
 				}
 				
 				if(start.getText() == "Stop" && j == 0) {
 					
+					
+					t.suspend();
+					t2.suspend();
 					start.setText("Start");
 				}
 				
@@ -219,7 +310,7 @@ public class SimFrame extends JFrame {
 		start.addActionListener(startListener);
 		
 		
-		exit = new JButton("ZakoÒcz");
+		exit = new JButton("Zako≈Ñcz");
 		ActionListener exitListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -251,18 +342,43 @@ public class SimFrame extends JFrame {
 		panelButtons.add(exit, glButtons);
 		
 		
-	
-		
 		menuPanel.add(panelButtons);
 		
 		glMain.setHgap(1);
 		glMain.setVgap(1);
 		menuPanel.setLayout(glMain);
 		
-		
-		
 		this.add(spacePanel, BorderLayout.CENTER);
 		this.add(menuPanel, BorderLayout.LINE_END);
+		
+	}
+
+	@Override
+	public void run() {
+		while(true) {
+			
+			try {
+				Thread.sleep(18/timeSlider.getValue());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			for(int i = 0; i < spacePanel.listBody.size(); i++) {
+				
+				if(bodies.getSelectedItem() == spacePanel.listBody.get(i).getName()) {
+				
+					mass.setText("Waga: " + spacePanel.listBody.get(i).getMass()); 
+					xx.setText("X: "+ spacePanel.listBody.get(i).getX()); 
+					yy.setText("Y: " + spacePanel.listBody.get(i).getY());
+					vxx.setText("Vy: " + spacePanel.listBody.get(i).getVx()); 
+					vyy.setText("Vx: " + spacePanel.listBody.get(i).getVy());
+					
+				}
+			}
+			
+			
+		}
 		
 	}
 }
