@@ -315,8 +315,8 @@ public class MainFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				to.dispose();
 				
-				bodies.add(new Body("100", 500, 100, Color.CYAN, 650, 550, 0, 30, 1));
-				bodies.add(new Body("50", 500, 100, Color.GREEN, 800, 550, 0, -30, 3));
+				bodies.add(new Body("Ciê¿ki James", 500, 100, Color.CYAN, 850, 550, 0, 30, 1));
+				bodies.add(new Body("Lekka Alice", 500, 100, Color.GREEN, 700, 550, 0, -30, 3));
 				//bodies.add(new Body("50", 500, 100, Color.WHITE, 500, 450, 5, -10, 4));
 				//bodies.add(new Body("50", 50, 50, Color.WHITE, 260, 260, -5, -5, 3));
 
@@ -359,10 +359,10 @@ public class MainFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				to.dispose();
 				
-				bodies.add(new Body("100", 500, 100, Color.CYAN, 350, 250, -30, 40, 1));
-				bodies.add(new Body("50", 500, 100, Color.GREEN, 500, 250, -30, -20, 3));
-				bodies.add(new Body("50", 500, 100, Color.WHITE, 425, 350, 80, 0, 4));
-				bodies.add(new Body("50", 1000000000, 100, Color.YELLOW, 425, 300, 0, 0, 4));
+				bodies.add(new Body("100", 500, 30, Color.CYAN, 350, 250, -30, 40, 1));
+				bodies.add(new Body("50", 500, 30, Color.GREEN, 500, 250, -30, -20, 3));
+				bodies.add(new Body("50", 50000, 100, Color.WHITE, 425, 350, 10, 0, 4));
+				bodies.add(new Body("50", 100000, 100, Color.YELLOW, 425, 300, 0, 0, 4));
 			
 				coefs.add((double) 40);
 				coefs.add((double) -0.5);
@@ -372,6 +372,30 @@ public class MainFrame extends JFrame{
 			} 
 		});
 		example.add(exampleItem3);
+		
+		JMenuItem exampleItem4 = new JMenuItem("uk³ad 8 cia³");
+		exampleItem4.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				to.dispose();
+				
+				bodies.add(new Body("100", 500, 100, Color.CYAN, 150, 250, -2, 2, 1));
+				bodies.add(new Body("50", 500, 100, Color.GREEN, 300, 250, -3, -1, 3));
+				bodies.add(new Body("50", 500, 100, Color.WHITE, 225, 350, 2, -3, 4));
+				bodies.add(new Body("50", 1000, 300, Color.YELLOW, 225, 300, 2, 1, 4));
+				
+				bodies.add(new Body("Ciê¿ki James", 500, 100, Color.CYAN, 950, 650, 0, 30, 1));
+				bodies.add(new Body("Lekka Alice", 500, 100, Color.GREEN, 800, 650, 0, -30, 3));
+			
+				coefs.add((double) 40);
+				coefs.add((double) -1);
+				
+		    	to = new SimFrame(bodies, coefs);
+		    	to.setVisible(true);
+			} 
+		});
+		example.add(exampleItem4);
 		
 		
 		/* ŒRODKOWA GRAFIKA */

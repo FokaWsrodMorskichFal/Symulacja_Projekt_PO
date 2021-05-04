@@ -22,13 +22,17 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
 public class SimFrame extends JFrame {
 	
-	static final int SLIDER_MIN = 1; // ????
-	static final int SLIDER_MAX = 4;
-	static final int SLIDER_INIT = 1;
+	static final int SLIDER_MIN = 1;
+	static final int SLIDER_MAX = 5;
+	static final int SLIDER_INIT = 3;
+	
+	int stan_slider;
 
 	JComboBox bodies;
 	
@@ -65,9 +69,9 @@ public class SimFrame extends JFrame {
 	public SimFrame(ArrayList<Body> bodyList, ArrayList<Double> coefficientsList) throws HeadlessException {
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(new Dimension(1024, 768));
+		this.setSize(new Dimension(1624, 1000));
 		this.setTitle("Symulacja ruchu ciał‚ pod wpływem siły centralnej");
-
+		stan_slider=2;
 		
 		// 		MENU 		//
 		
@@ -128,8 +132,8 @@ public class SimFrame extends JFrame {
 				mass = new JLabel("Waga: " + bodyList.get(i).getMass());
 				xx = new JLabel("X: "+ bodyList.get(i).getX());
 				yy = new JLabel("Y: " + bodyList.get(i).getY());
-				vxx = new JLabel("Vy: " + bodyList.get(i).getVx());
-				vyy = new JLabel("Vx: " + bodyList.get(i).getVy());
+				vxx = new JLabel("Vx: " + bodyList.get(i).getVx());
+				vyy = new JLabel("Vy: " + bodyList.get(i).getVy());
 				
 			}
 		
@@ -187,6 +191,14 @@ public class SimFrame extends JFrame {
 		timeSlider.setMajorTickSpacing(1);
 		timeSlider.setPaintTicks(true);
 		timeSlider.setPaintLabels(true);
+		timeSlider.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				stan_slider=timeSlider.getValue();
+				spacePanel.aktual(stan_slider);
+			}
+		});
 		
 		
 		menuPanel.add(timeSlider);

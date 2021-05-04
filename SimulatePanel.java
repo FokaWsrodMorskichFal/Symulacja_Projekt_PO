@@ -23,6 +23,7 @@ public class SimulatePanel extends JPanel implements Runnable{
 	ArrayList<Body> listBody;
 	ArrayList<Body> copylistBody;
 	int dl;
+	int czas=3;
 	
 	public SimulatePanel(ArrayList<Body> bodyList, ArrayList<Double> coefsList) {
 		
@@ -40,6 +41,10 @@ public class SimulatePanel extends JPanel implements Runnable{
 		
 	}
 	
+	public void aktual(int czas) {
+		this.czas=czas;
+	}
+	
 	public void paintComponent(Graphics g) {
 		
 		super.paintComponent(g);
@@ -54,10 +59,10 @@ public class SimulatePanel extends JPanel implements Runnable{
 			
 			g2d.setColor(listBody.get(i).getColor());
 			
-			g2d.fillOval(listBody.get(i).getX(),listBody.get(i).getY() , r, r);
+			g2d.fillOval( (int) (listBody.get(i).getX()), (int) (listBody.get(i).getY()) , r, r);
 			
 			g2d.setColor(Color.white);
-			g2d.drawString(listBody.get(i).getName(), listBody.get(i).getX()+5+r, listBody.get(i).getY()+5+r);
+			g2d.drawString(listBody.get(i).getName(), (int) (listBody.get(i).getX())+5+r, (int) (listBody.get(i).getY()+5+r));
 			
 		}
 		
@@ -68,7 +73,7 @@ public class SimulatePanel extends JPanel implements Runnable{
 	public void run() {
 		while(true) {
 			try {
-				Thread.sleep(10);
+				Thread.sleep(18/czas);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

@@ -7,17 +7,17 @@ public class Body {
 	
 	String name;
 	double mass;
-	double charge;/////
+	double charge;
 	Color color;
-	int x;
-	int y;
+	double x;
+	double y;
 	double vx;
 	double vy;
 	double dt=0.1;
 	int j;
 	
 	
-	public Body(String n, double m, double charge, Color c, int xx, int yy, double vxx, double vyy, int j) {
+	public Body(String n, double m, double charge, Color c, double xx, double yy, double vxx, double vyy, int j) {
 		
 		this.j=j;
 		this.charge=charge;
@@ -59,8 +59,8 @@ public class Body {
 		int czlony=coefsList.size()/2;
 		//ArrayList<Body>
 		
-		int x=0;
-		int y=0;
+		double x=0;
+		double y=0;
 		double vx=0;
 		double vy=0;
 		double F=0;
@@ -87,11 +87,12 @@ public class Body {
 					System.out.println(coefsList.get(j+1));
 					*/
 				}
-				System.out.println("F");
-				System.out.println(F);
+				
+				//System.out.println("F");
+				//System.out.println(F);
 				Fy=Fy+F*((listBody.get(i).getY()-listBody.get(to).getY())/r);
 				Fx=Fx+F*((listBody.get(i).getX()-listBody.get(to).getX())/r);
-				System.out.println("sin");
+				/*System.out.println("sin");
 				System.out.println((listBody.get(i).getY()-listBody.get(to).getY())/r);
 				System.out.println("cos");
 				System.out.println((listBody.get(i).getX()-listBody.get(to).getX())/r);
@@ -102,29 +103,44 @@ public class Body {
 				System.out.println(listBody.get(i).getY()-listBody.get(to).getY());
 				System.out.println("r");
 				System.out.println(r);
+				*/
 				F=0;
 			}
 		}
-		System.out.println("Fx");
-		System.out.println(Fx);
-		System.out.println("Fy");
-		System.out.println(Fy);
+		
+		//System.out.println("Fx");
+		//System.out.println(Fx);
+		//System.out.println("Fy");
+		//System.out.println(Fy);
 		
 		double ax=Fx/listBody.get(to).mass;
 		double ay=Fy/listBody.get(to).mass;
 		//listBody.get(to).setX((int) (listBody.get(to).x+listBody.get(to).vx*dt+0.5*ax*dt*dt));
-		x=(int) (listBody.get(to).x+listBody.get(to).vx*dt+0.5*ax*dt*dt);
+		x=listBody.get(to).x+listBody.get(to).vx*dt+0.5*ax*dt*dt;
 		//listBody.get(to).setY((int) (listBody.get(to).y+listBody.get(to).vy*dt+0.5*ay*dt*dt));
-		y=(int) (listBody.get(to).y+listBody.get(to).vy*dt+0.5*ay*dt*dt);
+		y=listBody.get(to).y+listBody.get(to).vy*dt+0.5*ay*dt*dt;
 		//listBody.get(to).setVx(listBody.get(to).vx+ax*dt);
 		vx=listBody.get(to).vx+ax*dt;
 		//listBody.get(to).setVy(listBody.get(to).vy+ay*dt);
 		vy=listBody.get(to).vy+ay*dt;
 	
-		if(to==0) {
-			System.out.println(vx);
-			System.out.println(vy);
-		}
+		System.out.println("*****Cia³o "+listBody.get(to).name+"*****");
+		
+		System.out.println("vxp");
+		System.out.println(listBody.get(to).vx);
+		System.out.println("vxk");
+		System.out.println(vx);
+		System.out.println("dvx");
+		System.out.println(vx-listBody.get(to).vx);
+		System.out.println("vyp");
+		System.out.println(listBody.get(to).vy);
+		System.out.println("vyk");
+		System.out.println(vy);
+		System.out.println("dvy");
+		System.out.println(vy-listBody.get(to).vy);
+		
+		System.out.println(vx);
+		System.out.println(vy);
 		
 		/*
 		if(to==0) {
@@ -173,7 +189,7 @@ public class Body {
 	}
 
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
@@ -183,7 +199,7 @@ public class Body {
 	}
 
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
