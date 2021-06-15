@@ -32,14 +32,13 @@ public class SimulatePanel extends JPanel implements Runnable{
 	
 	
 	int counter=0;
-	int dlbody;
-	int dlsat;
-	int czas=3;
-	int smuga=63;
+	int lenBody;
+	int time=3;
+	int nebula=63;
 	double seconds = 0.00;
     int minutes = 0;
 	
-	boolean smuga_bool=false;
+	boolean nebulaBoolean=false;
 	
 	public SimulatePanel(ArrayList<Body> bodyList, ArrayList<Double> coefsList) {
 		
@@ -52,21 +51,20 @@ public class SimulatePanel extends JPanel implements Runnable{
 		listBody=bodyList;
 		copylistBody=bodyList;
 		
-		dlbody=listBody.size();
-		dlsat=satList.size();
+		lenBody=listBody.size();
 		
 		pointSatMatrix = new ArrayList<ArrayList<Point>>();
 		pointBodyMatrix = new ArrayList<ArrayList<Point>>();
 		
 		for(int i=0; i<10; i++) {
 			pointSatMatrix.add(new ArrayList<Point>());
-			for(int j=0; j<smuga;j++) {
+			for(int j=0; j<nebula;j++) {
 				pointSatMatrix.get(i).add(new Point(0, 0));
 			}
 		}
-		for(int i=0; i<dlbody; i++) {
+		for(int i=0; i<lenBody; i++) {
 			pointBodyMatrix.add(new ArrayList<Point>());
-			for(int j=0; j<smuga;j++) {
+			for(int j=0; j<nebula;j++) {
 				pointBodyMatrix.get(i).add(new Point(0, 0));
 			}
 		}
@@ -76,8 +74,8 @@ public class SimulatePanel extends JPanel implements Runnable{
 		
 	}
 	
-	public void aktual(int czas) {
-		this.czas=czas;
+	public void actual(int t) {
+		this.time=t;
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -88,7 +86,7 @@ public class SimulatePanel extends JPanel implements Runnable{
 		BasicStroke bs1 = new BasicStroke(2);
 		g2d.setStroke(bs1);
 		
-		if(counter==smuga) {
+		if(counter==nebula) {
 			counter=0;
 		}
 		
@@ -106,16 +104,16 @@ public class SimulatePanel extends JPanel implements Runnable{
 			pointBodyMatrix.get(i).set(counter, pointBodyMatrix.get(i).get(counter).aktual((int) (listBody.get(i).getX()), (int) (listBody.get(i).getY())));
 			
 			//jeœli smuga jest w³¹czona to j¹ wyœwietlamy
-			if(smuga_bool==true) {
-				for(int j=counter+1; j<smuga+counter+1;j++) {
-					if(j<smuga){
-						Color kolorek=new Color(listBody.get(i).getColor().getRed(),listBody.get(i).getColor().getGreen(),listBody.get(i).getColor().getBlue(), 2*(j-counter));//180+(j-counter)
-						g2d.setColor(kolorek);
+			if(nebulaBoolean==true) {
+				for(int j=counter+1; j<nebula+counter+1;j++) {
+					if(j<nebula){
+						Color col1=new Color(listBody.get(i).getColor().getRed(),listBody.get(i).getColor().getGreen(),listBody.get(i).getColor().getBlue(), 2*(j-counter));//180+(j-counter)
+						g2d.setColor(col1);
 						g2d.fillOval( (int) (pointBodyMatrix.get(i).get(j).x), (int) (pointBodyMatrix.get(i).get(j).y) , r, r);//*((255-2*(j-counter))/(255))
 					}else{
-						Color kolorek=new Color(listBody.get(i).getColor().getRed(),listBody.get(i).getColor().getGreen(),listBody.get(i).getColor().getBlue(), 2*(j-counter));//180+(j-counter)//2*(j-counter)
-						g2d.setColor(kolorek);
-						g2d.fillOval( (int) (pointBodyMatrix.get(i).get(j-smuga).x), (int) (pointBodyMatrix.get(i).get(j-smuga).y) , r, r);
+						Color col2=new Color(listBody.get(i).getColor().getRed(),listBody.get(i).getColor().getGreen(),listBody.get(i).getColor().getBlue(), 2*(j-counter));//180+(j-counter)//2*(j-counter)
+						g2d.setColor(col2);
+						g2d.fillOval( (int) (pointBodyMatrix.get(i).get(j-nebula).x), (int) (pointBodyMatrix.get(i).get(j-nebula).y) , r, r);
 					}
 				}
 			}
@@ -142,16 +140,16 @@ public class SimulatePanel extends JPanel implements Runnable{
 				
 				pointSatMatrix.get(i).set(counter, pointSatMatrix.get(i).get(counter).aktual((int) (satList.get(i).getX()), (int) (satList.get(i).getY())));
 				
-				if(smuga_bool==true) {
-					for(int j=counter+1; j<smuga+counter+1;j++) {
-						if(j<smuga){
-							Color kolorek=new Color(satList.get(i).getColor().getRed(),satList.get(i).getColor().getGreen(),satList.get(i).getColor().getBlue(), 2*(j-counter));//180+(j-counter)
-							g2d.setColor(kolorek);
+				if(nebulaBoolean==true) {
+					for(int j=counter+1; j<nebula+counter+1;j++) {
+						if(j<nebula){
+							Color col3=new Color(satList.get(i).getColor().getRed(),satList.get(i).getColor().getGreen(),satList.get(i).getColor().getBlue(), 2*(j-counter));//180+(j-counter)
+							g2d.setColor(col3);
 							g2d.fillOval( (int) (pointSatMatrix.get(i).get(j).x), (int) (pointSatMatrix.get(i).get(j).y) , r, r);//*((255-2*(j-counter))/(255))
 						}else{
-							Color kolorek=new Color(satList.get(i).getColor().getRed(),satList.get(i).getColor().getGreen(),satList.get(i).getColor().getBlue(), 2*(j-counter));//180+(j-counter)//2*(j-counter)
-							g2d.setColor(kolorek);
-							g2d.fillOval( (int) (pointSatMatrix.get(i).get(j-smuga).x), (int) (pointSatMatrix.get(i).get(j-smuga).y) , r, r);
+							Color col4=new Color(satList.get(i).getColor().getRed(),satList.get(i).getColor().getGreen(),satList.get(i).getColor().getBlue(), 2*(j-counter));//180+(j-counter)//2*(j-counter)
+							g2d.setColor(col4);
+							g2d.fillOval( (int) (pointSatMatrix.get(i).get(j-nebula).x), (int) (pointSatMatrix.get(i).get(j-nebula).y) , r, r);
 						}
 					}
 				}
@@ -174,7 +172,6 @@ public class SimulatePanel extends JPanel implements Runnable{
 						e.printStackTrace();
 					}
 	                seconds += 0.01;
-	                //System.out.println("SEKUNDY " + seconds);
 	                if(seconds > 60) {
 	                    minutes ++;
 	                    seconds = 0.0;
@@ -188,12 +185,11 @@ public class SimulatePanel extends JPanel implements Runnable{
 	public void run() {
 		while(true) {
 			try {
-				Thread.sleep(18/czas);
+				Thread.sleep(18/time);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			for(int i=0; i<listBody.size(); i++) {
-				//this.listBody.get(i).next(copylistBody, coefsList, i);
 				this.listBody.set(i, this.listBody.get(i).next(copylistBody, coefsList, i));
 			}
 			
@@ -201,10 +197,7 @@ public class SimulatePanel extends JPanel implements Runnable{
 				
 				copySatList = satList;
 				for(int i = 0 ; i < satList.size(); i++) {
-					
-					//System.out.println(satList.get(i).getX()+" "+satList.get(i).getY());
 					this.satList.set(i, this.satList.get(i).nextSat(copylistBody, coefsList, copySatList, i));
-					//System.out.println(satList.get(i).getX()+" "+satList.get(i).getY());
 				}
 			}
 			

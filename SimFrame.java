@@ -290,10 +290,10 @@ public class SimFrame extends JFrame implements Runnable {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(spacePanel.smuga_bool==true) {
-					spacePanel.smuga_bool=false;
+				if(spacePanel.nebulaBoolean==true) {
+					spacePanel.nebulaBoolean=false;
 				}else {
-					spacePanel.smuga_bool=true;
+					spacePanel.nebulaBoolean=true;
 				}
 				repaint();
 			}
@@ -315,7 +315,7 @@ public class SimFrame extends JFrame implements Runnable {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				stan_slider=timeSlider.getValue();
-				spacePanel.aktual(stan_slider);
+				spacePanel.actual(stan_slider);
 			}
 		});
 		
@@ -328,6 +328,7 @@ public class SimFrame extends JFrame implements Runnable {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				 
+				
 				 t.suspend();
 				 t3.suspend();
 				 start.setText("Start");
@@ -366,16 +367,21 @@ public class SimFrame extends JFrame implements Runnable {
 					
 					@Override
 					public void windowClosed(WindowEvent e) {
+						
 						if(satframe.j == 1) {
-							
-						spacePanel.satList.add(
+							if(counterSat==9) {
+								 addSatelite.setEnabled(false);
+							}
+							counterSat++;
+							System.out.println("winClosed");
+							System.out.println(counterSat);
+							spacePanel.satList.add(
 								new	Body(satframe.pole_nazwy.getText(), Double.valueOf(satframe.pole_wagi.getText()), 
 										Double.valueOf(satframe.pole_ladunku.getText()), satframe.kol, Integer.valueOf(satframe.pole_wsp_X.getText()),
 										Integer.valueOf(satframe.pole_wsp_Y.getText()) ,Double.valueOf(satframe.pole_pred_X.getText()), Double.valueOf(satframe.pole_pred_Y.getText()), satframe.j)
 								);
 							
 							model.addElement(satframe.pole_nazwy.getText());
-							counterSat++;
 							repaint();
 						}	
 					}
@@ -384,9 +390,7 @@ public class SimFrame extends JFrame implements Runnable {
 					public void windowActivated(WindowEvent e) {}
 				});
 			
-				 if(counterSat==9) {
-					 addSatelite.setEnabled(false);
-				 }
+				 
 			}
 		});
 		

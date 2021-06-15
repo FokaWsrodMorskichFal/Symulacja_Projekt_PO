@@ -38,20 +38,20 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame{
 
-	JTextField odpow;
-	JTextField odpow_wzor;
-	int l_cial;
-	int l_czlonow;
+	JTextField answer;
+	JTextField answer_equation;
+	int numBodies;
+	int numMembers;
 	NumberFormatException exception;
 	SubFrame sf;
-	JPanel prawy;
-	JFrame to;
-	JPanel prawy1;
+	JPanel right;
+	JFrame it;
+	JPanel right1;
 	ArrayList<Body> bodies = new ArrayList<Body>();
 	ArrayList<Double> coefs = new ArrayList<Double>();
 	
 	ArrayList<Character> txt  = new ArrayList<Character>();
-	ArrayList<Integer> ciapki = new ArrayList<Integer>();
+	ArrayList<Integer> tags = new ArrayList<Integer>();
 	
 	
 	
@@ -63,7 +63,7 @@ public class MainFrame extends JFrame{
 		this.setMaximizedBounds(new Rectangle(new Dimension(1724, 900)));
 		this.setMinimumSize(new Dimension(350, 900));
 		this.setMaximumSize(new Dimension(3000, 950));
-		to=this;
+		it=this;
 		this.addWindowListener(new WindowListener() {
 			
 			@Override
@@ -79,7 +79,7 @@ public class MainFrame extends JFrame{
 			public void windowDeactivated(WindowEvent e) {}
 			
 			@Override
-			public void windowClosing(WindowEvent e) {
+			public void windowClosing(WindowEvent e) {//zamkniêcie g³ównego okna zamyka ca³y program
 				System.exit(0);
 			}
 			
@@ -94,61 +94,61 @@ public class MainFrame extends JFrame{
 		
 		/* PRAWY PANEL */
 		
-		prawy = new JPanel();
-		prawy.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3, true));
-		prawy.setLayout(new BoxLayout(prawy, BoxLayout.Y_AXIS));
+		right = new JPanel();
+		right.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3, true));
+		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		
-		prawy1 = new JPanel();
-		prawy1.setPreferredSize(new Dimension(330, 130));
-		prawy1.setLayout(new BoxLayout(prawy1, BoxLayout.Y_AXIS));
+		right1 = new JPanel();
+		right1.setPreferredSize(new Dimension(330, 130));
+		right1.setLayout(new BoxLayout(right1, BoxLayout.Y_AXIS));
 		
-		JPanel pytanie = new JPanel();
-		pytanie.setSize(new Dimension(250, 25));
-		JLabel pyt = new JLabel("Wpisz liczbê cia³:");
-		pytanie.add(pyt);
+		JPanel question = new JPanel();
+		question.setSize(new Dimension(250, 25));
+		JLabel que = new JLabel("Wpisz liczbê cia³:");
+		question.add(que);
 		
-		prawy1.add(pytanie);
+		right1.add(question);
 		
-		JPanel odpowiedz = new JPanel();
-		odpow = new JTextField("3");
-		odpow.setPreferredSize(new Dimension(130, 20)); 
-		odpowiedz.add(odpow);
-		prawy1.add(odpowiedz);
+		JPanel answearPanel = new JPanel();
+		answer = new JTextField("3");
+		answer.setPreferredSize(new Dimension(130, 20)); 
+		answearPanel.add(answer);
+		right1.add(answearPanel);
 		
-		JPanel wzor = new JPanel();
-		JTextArea wzor_sily = new JTextArea("Wzór na si³ê centraln¹ jest konstruowany w oparciu o podane przez u¿ytkownika wspó³czynniki w postaci szeregu wyrazów, gdzie ka¿dy wyraz sk³ada siê ze wspó³czynnika i zmiennej r podniesionej do pewnej potêgi.");
-		wzor_sily.setSize(new Dimension(330, 70));
-		wzor_sily.setEditable(false);
-		wzor_sily.setLineWrap(true);
-		wzor_sily.setWrapStyleWord(true);
-		wzor_sily.setBackground(prawy1.getBackground());
-		wzor_sily.setBorder(BorderFactory.createLineBorder(Color.darkGray, 2, false));
-		wzor.add(wzor_sily);
+		JPanel equationPanel = new JPanel();
+		JTextArea equationTextArea = new JTextArea("Wzór na si³ê centraln¹ jest konstruowany w oparciu o podane przez u¿ytkownika wspó³czynniki w postaci szeregu wyrazów, gdzie ka¿dy wyraz sk³ada siê ze wspó³czynnika i zmiennej r podniesionej do pewnej potêgi.");
+		equationTextArea.setSize(new Dimension(330, 70));
+		equationTextArea.setEditable(false);
+		equationTextArea.setLineWrap(true);
+		equationTextArea.setWrapStyleWord(true);
+		equationTextArea.setBackground(right1.getBackground());
+		equationTextArea.setBorder(BorderFactory.createLineBorder(Color.darkGray, 2, false));
+		equationPanel.add(equationTextArea);
 		
-		prawy1.add(wzor);
+		right1.add(equationPanel);
 		
-		JPanel wzor_sily2 = new JPanel();
-		wzor_sily2.setSize(new Dimension(250, 25));
-		JLabel wzor_sily3 = new JLabel("Wpisz liczbê cz³onów n:", JLabel.CENTER);
-		wzor_sily2.add(wzor_sily3);
+		JPanel forceEquationPanel = new JPanel();
+		forceEquationPanel.setSize(new Dimension(250, 25));
+		JLabel forceEquationLabel = new JLabel("Wpisz liczbê cz³onów n:", JLabel.CENTER);
+		forceEquationPanel.add(forceEquationLabel);
 		
-		prawy1.add(wzor_sily2);
+		right1.add(forceEquationPanel);
 		
-		JPanel odpow_sily = new JPanel();
-		odpow_wzor = new JTextField();
-		odpow_wzor.setPreferredSize(new Dimension(130, 20)); 
-		odpow_sily.add(odpow_wzor);
-		prawy1.add(odpow_sily);
+		JPanel answerForcePanel = new JPanel();
+		answer_equation = new JTextField();
+		answer_equation.setPreferredSize(new Dimension(130, 20)); 
+		answerForcePanel.add(answer_equation);
+		right1.add(answerForcePanel);
 		
-		JPanel guziki = new JPanel();
-		guziki.setSize(new Dimension(330, 40));
-		guziki.setLayout(new FlowLayout());
+		JPanel buttonsPanel = new JPanel();
+		buttonsPanel.setSize(new Dimension(330, 40));
+		buttonsPanel.setLayout(new FlowLayout());
 		
-		JButton dalej = new JButton("Dalej");
-		dalej.setPreferredSize(new Dimension(80, 25));
+		JButton next = new JButton("Dalej");
+		next.setPreferredSize(new Dimension(80, 25));
 		
-		JButton koniec = new JButton("Zakoñcz");
-		koniec.setPreferredSize(new Dimension(100, 25));
+		JButton exit = new JButton("Zakoñcz");
+		exit.setPreferredSize(new Dimension(100, 25));
 		ActionListener exitListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -156,30 +156,30 @@ public class MainFrame extends JFrame{
 				System.exit(0); 
 			}
 		};
-		koniec.addActionListener(exitListener);
+		exit.addActionListener(exitListener);
 
-		dalej.addActionListener(new ActionListener() {
+		next.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try{
-				     l_cial = Integer.parseInt(odpow.getText());
-				     if(l_cial<1 || l_cial>8) {
+				     numBodies = Integer.parseInt(answer.getText());
+				     if(numBodies<1 || numBodies>8) {
 				    	 throw exception;
 				     }
-				     l_czlonow = Integer.parseInt(odpow_wzor.getText());
-				     if(l_czlonow<1 || l_czlonow>4) {
+				     numMembers = Integer.parseInt(answer_equation.getText());
+				     if(numMembers<1 || numMembers>4) {
 				    	 throw exception;
 				     }
-				     sf = new SubFrame(0, l_cial,null);
-				     sf.addWindowListener(new WindowListener() {
-						
+				     sf = new SubFrame(0, numBodies,null);			//SubFrame czyli okno od dodawania cia³
+				     sf.addWindowListener(new WindowListener() {	//ActionListener s³u¿y do blokowania guzików i pól
+				    	 										//tekstowych w mainFramie gdy pojawiaj¹ siê SubFramy
 						@Override
 						public void windowOpened(WindowEvent e) {
-							dalej.setEnabled(false);
-						    koniec.setEnabled(false);
-						    odpow.setEnabled(false);
-						    odpow_wzor.setEnabled(false);
+							next.setEnabled(false);
+						    exit.setEnabled(false);		
+						    answer.setEnabled(false);
+						    answer_equation.setEnabled(false);
 						}
 						
 						@Override
@@ -196,13 +196,13 @@ public class MainFrame extends JFrame{
 						
 						@Override
 						public void windowClosed(WindowEvent e) {
-						    if(sf.j!=l_cial) {
-						    	dalej.setEnabled(true);
-							    koniec.setEnabled(true);
-							    odpow.setEnabled(true);
-							    odpow_wzor.setEnabled(true);
+						    if(sf.j!=numBodies) {
+						    	next.setEnabled(true);		//sf.j!=l_cial to warunek sprawdzaj¹cy czy subFrame zamkn¹³ siê na skutek dodania wsyztskich zadeklarowanych przez u¿ytkownika cia³ czy na skutek wciœniêcia "X", zmienna j wewn¹trz subFrame'a liczy ile dodano cia³
+							    exit.setEnabled(true);	//jeœli SubFrame zostanie wy³¹czony wracamy do mainFrame
+							    answer.setEnabled(true);
+							    answer_equation.setEnabled(true);
 						    }else {
-							    SubFrame2 sf2 = new SubFrame2(l_czlonow, sf.listBody);
+							    SubFrame2 sf2 = new SubFrame2(numMembers, sf.listBody);//subFrame2 s³u¿¹cy do zbierania od u¿ytkownika wspó³czynników do wzoru na si³ê
 							    sf2.setVisible(true);
 								sf2.addWindowListener(new WindowListener() {
 									
@@ -223,15 +223,15 @@ public class MainFrame extends JFrame{
 									
 									@Override
 									public void windowClosed(WindowEvent e) {
-										dalej.setEnabled(true);
-									    koniec.setEnabled(true);
-									    odpow.setEnabled(true);
-									    odpow_wzor.setEnabled(true);
+										next.setEnabled(true);
+									    exit.setEnabled(true);		//jeœli okno to zostanie zamkniête to wracamy do aktywnego
+									    answer.setEnabled(true);			//okna g³ównego
+									    answer_equation.setEnabled(true);
 									    
-									    if(sf2.zamkniecie==true) {
-									    	to.dispose();
-									    	to = new SimFrame(sf.listBody, sf2.coefsList);
-									    	to.setVisible(true);
+									    if(sf2.close==true) {		//zmienna Boolena "close" w subFrame2 monitoruje czy do zamknêcia dosz³o
+									    	it.dispose();			//z powodu uzupe³nienia wsyztskich pól czy z powodu wciœniêcia "X"
+									    	it = new SimFrame(sf.listBody, sf2.coefsList);	//zmienna "to" jest naszym oknem mainFrame, które przestajemy wyœwietlaæ a nastêpnie
+									    	it.setVisible(true);		//zaczynamy ale zainicjalizowane nowym obiektem SimFrame z argumentami pozyskanymi z sybFrameów
 									    }
 									}
 									
@@ -244,7 +244,7 @@ public class MainFrame extends JFrame{
 						@Override
 						public void windowActivated(WindowEvent e) {}
 					});
-				     sf.setVisible(true);
+				    sf.setVisible(true); 
 				}
 				catch(NumberFormatException exception){
 				     System.out.println("Niepoprawna liczba cia³ lub cz³onów. Liczba cia³ musi byæ z przedzia³u (1-8), a liczba cz³onów z przedzia³u (1-4).");
@@ -252,24 +252,24 @@ public class MainFrame extends JFrame{
 			}
 		});
 		
-		JLabel przerwa = new JLabel("    ");
+		JLabel breakLabel = new JLabel("    ");
 		
-		guziki.add(dalej);
-		guziki.add(przerwa);
-		guziki.add(koniec);
-		prawy1.add(guziki);
+		buttonsPanel.add(next);
+		buttonsPanel.add(breakLabel);
+		buttonsPanel.add(exit);
+		right1.add(buttonsPanel);
 		
-		prawy.add(prawy1);
+		right.add(right1);
 		
-		Tlo postac_wzor = new Tlo("src/gotowe2.png");
-		postac_wzor.setPreferredSize(new Dimension(330, 340));
-		prawy.add(postac_wzor);
+		Backgroung equationForm = new Backgroung("src/gotowe2.png");		//klasa Background dziedziczaca po JPanel
+		equationForm.setPreferredSize(new Dimension(330, 340));
+		right.add(equationForm);
 		
-		JPanel wyp = new JPanel();
-		wyp.setPreferredSize(new Dimension(330, 210));
-		prawy.add(wyp);
+		JPanel fillingPanel = new JPanel();
+		fillingPanel.setPreferredSize(new Dimension(330, 210));
+		right.add(fillingPanel);
 		
-		this.add(prawy, BorderLayout.LINE_END);
+		this.add(right, BorderLayout.LINE_END);
 		
 		
 		
@@ -299,7 +299,7 @@ public class MainFrame extends JFrame{
                 fileChooser.setFileFilter(filter);
                 int returnVal = fileChooser.showOpenDialog(getParent());
                 if(returnVal == JFileChooser.APPROVE_OPTION) {
-                        System.out.println("You chose to open this file: "+fileChooser.getSelectedFile().getName());
+                        System.out.println("Wybrano plik do otwarcia: "+fileChooser.getSelectedFile().getName());
                         if(fileChooser.getSelectedFile().canRead()) {
                             InputStream inputStream=null;
                             try {
@@ -321,7 +321,7 @@ public class MainFrame extends JFrame{
                                 try {
                                     tmp=(char) flag;
                                     flag=inputStreamReader.read();
-                                    txt.add(tmp);
+                                    txt.add(tmp);		//w tablicy txt sk³adowany jest ca³y tekst
                                 } catch (IOException e1) {
                                     e1.printStackTrace();
                                 }
@@ -329,13 +329,13 @@ public class MainFrame extends JFrame{
                             
                         }
                 
-                int bCounts = Integer.valueOf(String.valueOf(txt.get(0)));
+                int bCounts = Integer.valueOf(String.valueOf(txt.get(0)));//pierwsze dwie dane, liczba cial i wspolczynnikow
                 int cCounts = Integer.valueOf(String.valueOf(txt.get(2)));
           
                 for( int i = 0; i < txt.size(); i ++)
                 {
                 	if(txt.get(i) == '"')
-                		ciapki.add(i);
+                		tags.add(i);
                 }
 
                int counter = 0;
@@ -349,7 +349,7 @@ public class MainFrame extends JFrame{
             	   double vx = 0.0;
             	   double vy = 0.0;
                 	
-            	   for(int j = ciapki.get(0+counter) + 1; j < ciapki.get(1+counter) ; j++ ) {
+            	   for(int j = tags.get(0+counter) + 1; j < tags.get(1+counter) ; j++ ) {
             		   
             		   name += Character.toString(txt.get(j));
             	   
@@ -357,7 +357,7 @@ public class MainFrame extends JFrame{
             	   
             	   String mS = "";
             	   
-            	   for(int j = ciapki.get(2+counter) + 1; j < ciapki.get(3+counter) ; j++ ) {
+            	   for(int j = tags.get(2+counter) + 1; j < tags.get(3+counter) ; j++ ) {
             		   
             		   mS += Character.toString(txt.get(j));
             		   
@@ -366,7 +366,7 @@ public class MainFrame extends JFrame{
             	   m = Double.valueOf(mS);
             	   
             	   String chS ="";
-            	   for( int j = ciapki.get(4+counter) + 1; j < ciapki.get(5+counter) ; j++ ) {
+            	   for( int j = tags.get(4+counter) + 1; j < tags.get(5+counter) ; j++ ) {
             		   chS += Character.toString(txt.get(j));  
             	   }
             	   ch = Double.valueOf(chS);
@@ -376,7 +376,7 @@ public class MainFrame extends JFrame{
                    int s2=0;
                    int colSize=0;
                    String tmp2="";
-                   for(int j=ciapki.get(6+counter)+1; j<ciapki.get(7+counter);j++) {
+                   for(int j=tags.get(6+counter)+1; j<tags.get(7+counter);j++) {
                        tmp2+=txt.get(j);
                        if(txt.get(j)==' ' && s1==0) {
                            s1=j;
@@ -389,7 +389,7 @@ public class MainFrame extends JFrame{
                    int c1, c2, c3;
 
                    String tmpc="";
-                   for(int k=ciapki.get(6+counter)+1; k<s1;k++) {
+                   for(int k=tags.get(6+counter)+1; k<s1;k++) {
                        tmpc+=txt.get(k);
                    }
                    c1=Integer.parseInt(tmpc);
@@ -401,18 +401,9 @@ public class MainFrame extends JFrame{
                    }
                    c2=Integer.parseInt(tmpc);
                    tmpc="";
-                   int a=ciapki.get(6+counter)+1;
-                   System.out.println("ciapki.get(6+counter)+1: "+a);
-                   System.out.println("s1: "+s1);
-                   System.out.println("colSize: "+colSize);
-                   a=s2+1;
-                   System.out.println("k=s2+1: "+a);
-                   a=colSize + ciapki.get(6+counter);
-                   System.out.println("k<"+a);
                    
-                   for(int k=s2+1; k<colSize + ciapki.get(6+counter)+1;k++) {
+                   for(int k=s2+1; k<colSize + tags.get(6+counter)+1;k++) {
                        tmpc+=txt.get(k);
-                       System.out.println("wejscie");
                    }
                    c3=Integer.parseInt(tmpc);
                    tmpc="";
@@ -423,7 +414,7 @@ public class MainFrame extends JFrame{
             	   
             	   
             	   String xS = "";
-            	   for( int j = ciapki.get(8+counter) + 1; j < ciapki.get(9+counter); j++ ) {
+            	   for( int j = tags.get(8+counter) + 1; j < tags.get(9+counter); j++ ) {
             		   
             		   xS += Character.toString(txt.get(j)); 
             	   }
@@ -433,7 +424,7 @@ public class MainFrame extends JFrame{
             	   
             	   
             	   String yS = "";
-            	   for( int j = ciapki.get(10+counter) + 1; j < ciapki.get(11+counter) ; j++ ) {
+            	   for( int j = tags.get(10+counter) + 1; j < tags.get(11+counter) ; j++ ) {
             		   
             		   yS += Character.toString(txt.get(j)); 
             	   }
@@ -446,14 +437,14 @@ public class MainFrame extends JFrame{
             	   }
             	   
             	   String vxS = "";
-            	   for( int j = ciapki.get(12+counter) + 1; j < ciapki.get(13+counter) ; j++ ) {
+            	   for( int j = tags.get(12+counter) + 1; j < tags.get(13+counter) ; j++ ) {
             		   
             		   vxS += Character.toString(txt.get(j)); 
             	   }
             	   vx = Double.valueOf(vxS);
             	   
             	   String vyS = "";
-            	   for( int j = ciapki.get(14+counter) + 1; j < ciapki.get(15+counter) ; j++ ) {
+            	   for( int j = tags.get(14+counter) + 1; j < tags.get(15+counter) ; j++ ) {
             		   
             		   vyS += Character.toString(txt.get(j)); 
             	   }
@@ -473,7 +464,7 @@ public class MainFrame extends JFrame{
             	   
             	   String a = ""; // wspolczynnik
             	   
-            	   for(int j = ciapki.get(bCounts*16+counter2)+1; j < ciapki.get(bCounts*16+1+counter2); j++) {
+            	   for(int j = tags.get(bCounts*16+counter2)+1; j < tags.get(bCounts*16+1+counter2); j++) {
             		   
             		   a += Character.toString(txt.get(j));
             		   
@@ -484,11 +475,11 @@ public class MainFrame extends JFrame{
             	   counter2 += 2;
                	}
               
-               to.dispose();
+               it.dispose();
                
-               to = new SimFrame(bodies, coefs);
+               it = new SimFrame(bodies, coefs);
                
-               to.setVisible(true);
+               it.setVisible(true);
                
                 
 			}
@@ -527,7 +518,7 @@ public class MainFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				to.dispose();
+				it.dispose();
 				
 				bodies.add(new Body("Ciê¿ki James", 500, 100, Color.CYAN, 850, 550, 0, 30, 1));
 				bodies.add(new Body("Lekka Alice", 500, 100, Color.GREEN, 700, 550, 0, -30, 3));
@@ -536,8 +527,8 @@ public class MainFrame extends JFrame{
 				coefs.add((double) -2);
 				
 				
-		    	to = new SimFrame(bodies, coefs);
-		    	to.setVisible(true);
+		    	it = new SimFrame(bodies, coefs);
+		    	it.setVisible(true);
 			}
 		});
 		example.add(exampleItem1);
@@ -548,7 +539,7 @@ public class MainFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				to.dispose();
+				it.dispose();
 				
 				bodies.add(new Body("A", 500, 100, Color.CYAN, 350, 250, -30, 40, 1));
 				bodies.add(new Body("B", 500, 100, Color.GREEN, 500, 250, -30, -20, 3));
@@ -558,8 +549,8 @@ public class MainFrame extends JFrame{
 				coefs.add((double) 100);
 				coefs.add((double) -1);
 				
-		    	to = new SimFrame(bodies, coefs);
-		    	to.setVisible(true);
+		    	it = new SimFrame(bodies, coefs);
+		    	it.setVisible(true);
 			} 
 		});
 		example.add(exampleItem2);
@@ -569,7 +560,7 @@ public class MainFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				to.dispose();
+				it.dispose();
 				
 				bodies.add(new Body("A", 500, 30, Color.CYAN, 350, 250, -30, 40, 1));
 				bodies.add(new Body("B", 500, 30, Color.GREEN, 500, 250, -30, -20, 3));
@@ -579,8 +570,8 @@ public class MainFrame extends JFrame{
 				coefs.add((double) 40);
 				coefs.add((double) -0.5);
 				
-		    	to = new SimFrame(bodies, coefs);
-		    	to.setVisible(true);
+		    	it = new SimFrame(bodies, coefs);
+		    	it.setVisible(true);
 			} 
 		});
 		example.add(exampleItem3);
@@ -590,7 +581,7 @@ public class MainFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				to.dispose();
+				it.dispose();
 				
 				bodies.add(new Body("A1", 50, 50, Color.WHITE, 50, 50, -1, 1, 1));
 				bodies.add(new Body("A2", 50, 50, Color.WHITE, 50, 100, 0, 2, 3));
@@ -605,8 +596,8 @@ public class MainFrame extends JFrame{
 				coefs.add((double) 0.1);
 				coefs.add((double) -1);
 				
-		    	to = new SimFrame(bodies, coefs);
-		    	to.setVisible(true);
+		    	it = new SimFrame(bodies, coefs);
+		    	it.setVisible(true);
 			} 
 		});
 		example.add(exampleItem5);
@@ -616,7 +607,7 @@ public class MainFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				to.dispose();
+				it.dispose();
 				
 				bodies.add(new Body("A1", 50, 50, Color.WHITE, 450, 250, -1, 1, 1));
 				bodies.add(new Body("A2", 50, 50, Color.WHITE, 450, 300, 0, 2, 3));
@@ -642,17 +633,17 @@ public class MainFrame extends JFrame{
 				coefs.add((double) 0.1);
 				coefs.add((double) -1);
 				
-		    	to = new SimFrame(bodies, coefs);
-		    	to.setVisible(true);
+		    	it = new SimFrame(bodies, coefs);
+		    	it.setVisible(true);
 			} 
 		});
 		example.add(exampleItem6);
 		
 		/* ŒRODKOWA GRAFIKA */
 		
-		Tlo tlo = new Tlo("src/bg.jpg");
-		tlo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3, true));
-		this.add(tlo, BorderLayout.CENTER);
+		Backgroung background = new Backgroung("src/bg.jpg");
+		background.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3, true));
+		this.add(background, BorderLayout.CENTER);
 		
 	}
 }

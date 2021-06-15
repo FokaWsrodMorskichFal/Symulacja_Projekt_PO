@@ -43,7 +43,7 @@ public class Body {
 	}
 
 	
-	
+	//metoda liczaca nastepna pozycje obiektu
 	public Body next(ArrayList<Body> listBody, ArrayList<Double> coefsList, int to) {
 
 		int dl=listBody.size();
@@ -57,44 +57,48 @@ public class Body {
 		double F=0;
 		double Fx=0;
 		double Fy=0;
-		for(int i=0; i<dl; i++) {
-			if(i!=to) {
+		for(int i=0; i<dl; i++) {//liczymy sume oddzia³ywan obiektu ze wszystkimi innymi
+			if(i!=to) {	//ale pomijamy sam obiekt zeby nie policzyc jego oddzia³ywana z samym sob¹
+				//odleglosc
 				Double r=Math.pow(Math.pow(listBody.get(i).getX()-listBody.get(to).getX(), 2)+Math.pow(listBody.get(i).getY()-listBody.get(to).getY(), 2), 0.5);
-	
+				//suma po wszytskich czlonach, skok iteracji co dwa, poniewa¿ kazdy czlon ma pare wspolczynnikow
 				for(int j=0;j<czlony;j=j+2) {
+					//sumujemy sile ze wszytskich czlonow
 					F=F+listBody.get(i).charge*listBody.get(to).charge*coefsList.get(j)*Math.pow(r, coefsList.get(j+1));
 				}
-				
+				//liczymy skladowe liczac odpowiednie funkcje trygonometryczne
 				Fy=Fy+F*((listBody.get(i).getY()-listBody.get(to).getY())/r);
 				Fx=Fx+F*((listBody.get(i).getX()-listBody.get(to).getX())/r);
-				
+				//zerujemy sile by uzyæ tej zmiennej do liczenia sily wypadkowej na inne cialo
 				F=0;
 			}
 		}
 		
 		
 		
-		double ax=Fx/listBody.get(to).mass;
+		double ax=Fx/listBody.get(to).mass;		//przyspiesznia
 		double ay=Fy/listBody.get(to).mass;
 		
-		x=listBody.get(to).x+listBody.get(to).vx*dt+0.5*ax*dt*dt;
+		x=listBody.get(to).x+listBody.get(to).vx*dt+0.5*ax*dt*dt;		//dt to nasz krok czasowy
 		
-		y=listBody.get(to).y+listBody.get(to).vy*dt+0.5*ay*dt*dt;
+		y=listBody.get(to).y+listBody.get(to).vy*dt+0.5*ay*dt*dt;		//liczymy nastepne polo¿enia x_0+v*t+0.5*at^2
 		
-		vx=listBody.get(to).vx+ax*dt;
+		vx=listBody.get(to).vx+ax*dt;			//liczymy nowe predkoœci
 		
 		vy=listBody.get(to).vy+ay*dt;
 	
 		
 		
 		
-		
+		//tworzymy nowy obiekt Body, ktory pola zwiazane z jego wlasciwosciami ma takei same jak poprzednik, ale ma nowe polozenie i predkosci, ostatni 
+		//argument konstruktora to informacja o tym ktore to cialo, obiekt Body wie jako który zosta³ dodany, co jest przydatne przy 
+		//liczeniu sily, by miec je ponumerowane i ³atwo rozró¿nialne
 		Body tmp=new Body(listBody.get(to).name, listBody.get(to).mass, listBody.get(to).charge, listBody.get(to).color, x, y, vx, vy, listBody.get(to).j);
 		
 		return tmp;
 	}
 	
-	
+	//metoda identyczna ale dla satelity, który zgodnie z za³o¿eniem nie oddzia³uje z innymi satelitami
 	public Body nextSat(ArrayList<Body> listBody, ArrayList<Double> coefsList, ArrayList<Body> satlist, int to) {
 
 		int dl=listBody.size();
