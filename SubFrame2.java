@@ -29,6 +29,7 @@ public class SubFrame2 extends JFrame {
 		this.setLayout(new GridLayout(numMembers+2, 1));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Wyra¿enie na si³ê");
+		setLocationRelativeTo ( null );
 		
 		close=false;
 		panelList = new ArrayList<JPanel>();

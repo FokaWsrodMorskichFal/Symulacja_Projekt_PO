@@ -22,73 +22,76 @@ import javax.swing.JTextField;
 public class SubFrame extends JFrame {
 
 	public ArrayList<JPanel> panelList;
-	public ArrayList<String> liczebniki;
+	public ArrayList<String> numerals;	// lista numerowania
 	public ArrayList<String> SatNameList;
-	public ArrayList<Body> listBody;
-	public ArrayList<Color> colList;
+	public ArrayList<Body> listBody;	//lista cial
+	public ArrayList<Color> colList; // lista kolorow
 	int j;
-	int l_cial;
-	Color kol;
-	Boolean CheckNazwy;
+	int cBody; // counter body - licznik cial
+	Color col;
+	Boolean checkName;
 	
-	JTextField pole_nazwy;
-	JTextField pole_wagi;
-	JTextField pole_ladunku;
-	JTextField pole_wsp_X;
-	JTextField pole_wsp_Y;
-	JTextField pole_pred_X;
-	JTextField pole_pred_Y;
+	JTextField nameField;
+	JTextField massField;
+	JTextField chargeField;
+	JTextField xField;
+	JTextField yField;
+	JTextField vxField; // predkosci X
+	JTextField vyField; // predkosci Y
 	
-	public SubFrame(int kolej, int l_cial, ArrayList<String> SatNames) {//
+	public SubFrame(int order, int cBody, ArrayList<String> SatNames) {
 		this.setSize(new Dimension(300, 450));
 		this.setLayout(new GridLayout(10 ,1));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Parametry");
+		this.setLocationRelativeTo ( null );
 		
-		SatNameList = new ArrayList<String>();
-		panelList = new ArrayList<JPanel>();
-		liczebniki = new ArrayList<String>();
-		listBody = new ArrayList<Body>();
-		colList = new ArrayList<Color>();
-		SatNameList=SatNames;
+		SatNameList = new ArrayList<String>(); //nazwy satelit
+		panelList = new ArrayList<JPanel>();	//lista paneli	
+		numerals = new ArrayList<String>();	//  lista numerowania ( do labela - estetyczne )
+		listBody = new ArrayList<Body>(); // lista cial
+		colList = new ArrayList<Color>(); // lista kolorow
+		SatNameList = SatNames; // do zmiany miedzy obiektami, a satelitami, dla obiektow dajemy "null" w konstruktorze
 		
-		CheckNazwy=false;
+		checkName=false;
 		
-		j=kolej;
-		this.l_cial=l_cial;
+		j=order;
+		this.cBody=cBody;
 		
 		for(int i=0; i<9; i++) {
 			panelList.add(new JPanel());
 			panelList.get(i).setLayout(new GridLayout(1, 3));
 		}
 		
-		liczebniki.add("pierwszego");
-		liczebniki.add("drugiego");
-		liczebniki.add("trzeciego");
-		liczebniki.add("czwartego");
-		liczebniki.add("piątego");
-		liczebniki.add("szóstego");
-		liczebniki.add("siudmego");
-		liczebniki.add("ósmego");
+		numerals.add("pierwszego");
+		numerals.add("drugiego");
+		numerals.add("trzeciego");
+		numerals.add("czwartego");
+		numerals.add("piątego");
+		numerals.add("szóstego");
+		numerals.add("siudmego");
+		numerals.add("ósmego");
 		
-		JLabel parametry;
+		JLabel parameters;
 		if(SatNameList==null) {
-			parametry = new JLabel("Podaj parametry "+liczebniki.get(j)+" ciała:", JLabel.CENTER);
+			parameters = new JLabel("Podaj parametry "+numerals.get(j)+" ciała:", JLabel.CENTER);
 		}else {
-			parametry = new JLabel("Podaj parametry satelity", JLabel.CENTER);
+			parameters = new JLabel("Podaj parametry satelity", JLabel.CENTER);
 		}
-		panelList.get(0).add(parametry);
+		panelList.get(0).add(parameters);
 		
+		
+		// Labele nazwy do frame'a:
 		JLabel nazwa = new JLabel("Nazwa:", JLabel.CENTER);
-		pole_nazwy = new JTextField("Obiekt "+String.format("%d", j+1));
-		pole_nazwy.setFont(new Font("DialogInput", 2, 17));
-		JLabel puste_nazwa = new JLabel(" ");
+		nameField = new JTextField("Obiekt "+String.format("%d", j+1));
+		nameField.setFont(new Font("DialogInput", 2, 17));
+		JLabel emptyName = new JLabel(" ");
 		panelList.get(1).add(nazwa);
-		panelList.get(1).add(pole_nazwy);
-		panelList.get(1).add(puste_nazwa);
+		panelList.get(1).add(nameField);
+		panelList.get(1).add(emptyName);
 		
 		JPanel buttonPanel = new JPanel();
-		JLabel puste_kolor1 = new JLabel(" ");
+		JLabel emptyColor1 = new JLabel(" ");
 		
 		colList.add(Color.blue);
 		colList.add(Color.cyan);
@@ -99,140 +102,144 @@ public class SubFrame extends JFrame {
 		colList.add(Color.RED);
 		colList.add(Color.YELLOW);
 		
-		kol=colList.get(j);
+		col=colList.get(j);
 		
-		JButton kolor = new JButton("Kolor");
-		buttonPanel.add(kolor);
-		kolor.addActionListener(new ActionListener() {
+		// wybor koloru za pomoca JColorChooser
+		JButton color = new JButton("Kolor");
+		buttonPanel.add(color);
+		color.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				kol=JColorChooser.showDialog(kolor, "Choose color", Color.WHITE);
-				if(kol==null) {
-					kol=colList.get(j);
+				col=JColorChooser.showDialog(color, "Choose color", Color.WHITE);
+				if(col==null) {
+					col=colList.get(j);
 				}
 			}
 		});
-		JLabel puste_kolor2 = new JLabel(" ");
-		panelList.get(2).add(puste_kolor1);
+		
+		// kolejne labele
+		JLabel emptyColor2 = new JLabel(" ");
+		panelList.get(2).add(emptyColor1);	
 		panelList.get(2).add(buttonPanel);
-		panelList.get(2).add(puste_kolor2);
+		panelList.get(2).add(emptyColor2);
 
-		JLabel waga = new JLabel("Masa:", JLabel.CENTER); //masa
-		pole_wagi = new JTextField();
-		pole_wagi.setFont(new Font("DialogInput", 2, 17));
-		JLabel puste_waga = new JLabel(" ");
-		panelList.get(3).add(waga);
-		panelList.get(3).add(pole_wagi);
-		panelList.get(3).add(puste_waga);
+		JLabel mass = new JLabel("Masa [kg]:", JLabel.CENTER); //masa
+		massField = new JTextField();
+		massField.setFont(new Font("DialogInput", 2, 17));
+		JLabel emptyMass = new JLabel(" ");
+		panelList.get(3).add(mass);
+		panelList.get(3).add(massField);
+		panelList.get(3).add(emptyMass);
 		
 		//charge
 		
-		JLabel ladunek = new JLabel("Ładunek:", JLabel.CENTER); //masa
-		pole_ladunku = new JTextField();
-		pole_ladunku.setFont(new Font("DialogInput", 2, 17));
-		JLabel puste_ladunek = new JLabel(" ");
-		panelList.get(4).add(ladunek);
-		panelList.get(4).add(pole_ladunku);
-		panelList.get(4).add(puste_ladunek);
+		JLabel charge = new JLabel("Ładunek [--]:", JLabel.CENTER); //masa
+		chargeField = new JTextField();
+		chargeField.setFont(new Font("DialogInput", 2, 17));
+		JLabel emptyCharge = new JLabel(" ");
+		panelList.get(4).add(charge);
+		panelList.get(4).add(chargeField);
+		panelList.get(4).add(emptyCharge);
 		
-		JLabel wsp_X = new JLabel("X:", JLabel.CENTER);
-		pole_wsp_X = new JTextField();
-		pole_wsp_X.setFont(new Font("DialogInput", 2, 17));
-		JLabel puste_wsp_X = new JLabel(" ");
-		panelList.get(5).add(wsp_X);
-		panelList.get(5).add(pole_wsp_X);
-		panelList.get(5).add(puste_wsp_X);
+		JLabel x = new JLabel("X [m]:", JLabel.CENTER); // wsp x
+		xField = new JTextField();
+		xField.setFont(new Font("DialogInput", 2, 17));
+		JLabel emptyX = new JLabel(" ");
+		panelList.get(5).add(x);
+		panelList.get(5).add(xField);
+		panelList.get(5).add(emptyX);
 		
-		JLabel wsp_Y = new JLabel("Y:", JLabel.CENTER);
-		pole_wsp_Y = new JTextField();
-		pole_wsp_Y.setFont(new Font("DialogInput", 2, 17));
-		JLabel puste_wsp_Y = new JLabel(" ");
-		panelList.get(6).add(wsp_Y);
-		panelList.get(6).add(pole_wsp_Y);
-		panelList.get(6).add(puste_wsp_Y);
+		JLabel y = new JLabel("Y [m]:", JLabel.CENTER); // wsp y
+		yField = new JTextField();
+		yField.setFont(new Font("DialogInput", 2, 17));
+		JLabel emptyY = new JLabel(" ");
+		panelList.get(6).add(y);
+		panelList.get(6).add(yField);
+		panelList.get(6).add(emptyY);
 		
-		JLabel pred_X = new JLabel("V_x:", JLabel.CENTER);
-		pole_pred_X = new JTextField();
-		pole_pred_X.setFont(new Font("DialogInput", 2, 17));
-		JLabel puste_pred_X = new JLabel(" ");
-		panelList.get(7).add(pred_X);
-		panelList.get(7).add(pole_pred_X);
-		panelList.get(7).add(puste_pred_X);
+		JLabel vx = new JLabel("V_x [m/s]:", JLabel.CENTER); // predkosc x
+		vxField = new JTextField();
+		vxField.setFont(new Font("DialogInput", 2, 17));
+		JLabel emptyVX = new JLabel(" ");
+		panelList.get(7).add(vx);
+		panelList.get(7).add(vxField);
+		panelList.get(7).add(emptyVX);
 		
-		JLabel pred_Y = new JLabel("V_y:", JLabel.CENTER);
-		pole_pred_Y = new JTextField();
-		pole_pred_Y.setFont(new Font("DialogInput", 2, 17));
-		JLabel puste_pred_Y = new JLabel(" ");
-		panelList.get(8).add(pred_Y);
-		panelList.get(8).add(pole_pred_Y);
-		panelList.get(8).add(puste_pred_Y);
+		JLabel vy = new JLabel("V_y [m/s]:", JLabel.CENTER); // predkosc y
+		vyField = new JTextField();
+		vyField.setFont(new Font("DialogInput", 2, 17));
+		JLabel emptyVY = new JLabel(" ");
+		panelList.get(8).add(vy);
+		panelList.get(8).add(vyField);
+		panelList.get(8).add(emptyVY);
 			
-		JPanel guziki = new JPanel();
-		guziki.setLayout(new FlowLayout());
-		JButton dalej = new JButton("Dalej");
+		JPanel buttons = new JPanel();  // panel guzikow
+		buttons.setLayout(new FlowLayout());
+		
+		// przycisk dalej, dodaje wpisane cialo do listy oraz na koncu zamyka SubFrame'a i włącza SimFrame'a
+		JButton next = new JButton("Dalej");
 		ActionListener nextListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try{	
-					if(SatNameList==null) {
+					if(SatNameList==null) { // jesli satelity sa "wylaczone"
 					for(int i=0; i<j; i++) {
-						System.out.println(listBody.get(i).name);
-						System.out.println(pole_nazwy.getText());
-						System.out.println(Objects.equals(pole_nazwy.getText(), listBody.get(i).name));
-						if(Objects.equals(pole_nazwy.getText(), listBody.get(i).name)) {
-							CheckNazwy=true;
+						
+						// sprawdzanie czy nazwy sie powtarzaja:
+						if(Objects.equals(nameField.getText(), listBody.get(i).name)) {
+							checkName=true;
 							break;
 						}else {
-							CheckNazwy=false;
+							checkName=false;
 						}
 					}
 					}else {
 						for(int i=0; i<SatNameList.size(); i++) {
-							if(Objects.equals(pole_nazwy.getText(), SatNameList.get(i))) {
-								CheckNazwy=true;
+							if(Objects.equals(nameField.getText(), SatNameList.get(i))) { // sprawdzanie nazw dla satelit
+								checkName=true;
 								break;
 							}else {
-								CheckNazwy=false;
+								checkName=false;
 							}
 						}
 					}
-					if(CheckNazwy==false) {
+					if(checkName==false) { // jesli nie powtarza sie nazwa to dane sa przekazane do listy body
 						listBody.add(
-								new	Body(pole_nazwy.getText(), Double.valueOf(pole_wagi.getText()), Double.valueOf(pole_ladunku.getText()), kol, Integer.valueOf(pole_wsp_X.getText()),
-									Integer.valueOf(pole_wsp_Y.getText()) ,Double.valueOf(pole_pred_X.getText()), Double.valueOf(pole_pred_Y.getText()), j)
+								new	Body(nameField.getText(), Double.valueOf(massField.getText()), Double.valueOf(chargeField.getText()), col, Integer.valueOf(xField.getText()),
+									Integer.valueOf(yField.getText()) ,Double.valueOf(vxField.getText()), Double.valueOf(vyField.getText()), j)
 							);
-						if(j < l_cial - 1) {
+						if(j < cBody - 1) { // j to counter ktory pilnuje liczbe zapisanych obektow
 							j++;
-							pole_nazwy.setText("Obiekt "+String.format("%d", j+1));
-							pole_wagi.setText(null);
-							pole_ladunku.setText(null);
-							pole_wsp_X.setText(null);
-							pole_wsp_Y.setText(null);
-							pole_pred_X.setText(null);
-							pole_pred_Y.setText(null);
-							parametry.setText("Podaj parametry "+liczebniki.get(j)+" ciała:");
-							kol=colList.get(j);
+							nameField.setText("Obiekt "+String.format("%d", j+1));
+							massField.setText(null);
+							chargeField.setText(null);
+							xField.setText(null);
+							yField.setText(null);
+							vxField.setText(null);
+							vyField.setText(null);
+							parameters.setText("Podaj parametry "+numerals.get(j)+" ciała:");
+							col=colList.get(j);
 						}else {
-							j++;
-							dispose();
+							j++; // jesli wpiszemy juz wszystkie obiekty to SubFrame sie wylacza i zapisuje dane
+							dispose();	// JESLI WYLACZYMY SUBFRAME ZA POMOCA "X" TO DANE SIE NIE ZAPISZA
 						}
 					}else {
 						JOptionPane.showMessageDialog(null, "Ta nazwa obiektu została już użyta","Błąd!",JOptionPane.ERROR_MESSAGE);
-					}
+					}	// okno dialogowe jesli nazwa sie powtorzy
 				}
 				
 				catch(NumberFormatException exception){
 				     JOptionPane.showMessageDialog(null, "Zły format parametrów!","Błąd!",JOptionPane.ERROR_MESSAGE);
-				}
+				}	// okngo dialogowe jesli wpiszemy nie poprawnie parametry
 			}
 		};
-		dalej.addActionListener(nextListener);
-		guziki.add(dalej);
+		next.addActionListener(nextListener);
+		buttons.add(next);
 		
 		for(int i=0; i<9;i++) {
 			this.add(panelList.get(i));
 		}
-		this.add(guziki);
+		this.add(buttons);
 	}
 }

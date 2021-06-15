@@ -13,7 +13,7 @@ public class Body {
 	double y;
 	double vx;
 	double vy;
-	double dt=0.1;
+	double dt=0.02; //sekundach
 	int j;
 	
 	

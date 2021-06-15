@@ -40,20 +40,18 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 @SuppressWarnings("serial")
 public class SimFrame extends JFrame implements Runnable {
 	
-	static final int SLIDER_MIN = 1;
-	static final int SLIDER_MAX = 5;
-	static final int SLIDER_INIT = 3;
+	static final int SLIDER_MIN = 1; // minimalna wartosc slider'a
+	static final int SLIDER_MAX = 7; // maksymalna
+	static final int SLIDER_INIT = 1; // poczatkowa ( przy wlaczeniu frame'a )
 	
-	double secFrame = 0.0;
-	int minFrame = 0;
 	
-	int stan_slider;
+	int stan_slider; // do przechowywania wartosci slidera
 
 	int counterSat=0;
 	
 	JComboBox bodies;
 	
-	String [] bodyString;
+	String [] bodyString; // do JComboBox'a, przewchowywanie nazw cial
 	
 	JLabel mass;
 	JLabel charge;
@@ -70,7 +68,7 @@ public class SimFrame extends JFrame implements Runnable {
 	
 	JSlider timeSlider;
 	
-	JCheckBox checkBox;
+	JCheckBox checkBox; //smuga
 	
 	SimulatePanel spacePanel;
 	JPanel menuPanel;
@@ -82,27 +80,29 @@ public class SimFrame extends JFrame implements Runnable {
 	JMenuItem save;
 	JMenuItem neww;
 	
-	JFrame to;
+	JFrame to; //znacznik na ten frame
 	
-	GridBagConstraints glButtons = new GridBagConstraints();
-	GridLayout glMain = new GridLayout(12,1);
-	ArrayList<String> SatNames;
-	ArrayList<Double> coefList = new ArrayList<Double>();
+	GridBagConstraints glButtons = new GridBagConstraints(); //layout do ustawienia guzikow
+	GridLayout glMain = new GridLayout(12,1); // layout do ustawienia calego menu ( caly prawy panel )
+	ArrayList<String> SatNames; // lista nazw satelit
+	ArrayList<Double> coefList = new ArrayList<Double>(); // do kopii listy wspolczynnikow do zapisywania
 	
 	public SimFrame(ArrayList<Body> bodyList, ArrayList<Double> coefficientsList) throws HeadlessException {
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(new Dimension(1624, 1000));
 		this.setTitle("Symulacja ruchu ciał‚ pod wpływem siły centralnej");
+		this.setLocationRelativeTo ( null ); // ustawia okno na srodek ekranu
+		
 		stan_slider=2;
 		to=new JFrame();
 		to=this;
 		
 		
 		coefList=coefficientsList;
-        ArrayList<Body> initCond=new ArrayList<>(bodyList); 
+        ArrayList<Body> initCond=new ArrayList<>(bodyList); // lista użyta do zapisywania
 		
-		SatNames = new ArrayList<String>();
+		SatNames = new ArrayList<String>();	// lista nazw satelit ( by nazwy się nie powtarzały )
 		
 		// 		MENU 		//
 		
@@ -140,7 +140,7 @@ public class SimFrame extends JFrame implements Runnable {
                 for(int i=0;i<spacePanel.coefsList.size();i++) {
                     save+=String.format("\"%s\" ", coefList.get(i));
                 }
-                System.out.println(save);
+                
                 
                 JFileChooser fileChooser = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter(null, "txt");
@@ -151,7 +151,7 @@ public class SimFrame extends JFrame implements Runnable {
                 }
                 
                 try {
-                    OutputStream outputStream = new FileOutputStream(fileChooser.getSelectedFile().getAbsolutePath());//fileChooser.getSelectedFile().getAbsolutePath()
+                    OutputStream outputStream = new FileOutputStream(fileChooser.getSelectedFile().getAbsolutePath());
                     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
                     outputStreamWriter.write(save);
                     outputStreamWriter.close();
@@ -185,7 +185,7 @@ public class SimFrame extends JFrame implements Runnable {
 		}
 		
 		
-		
+		// panel z paintcomponent i wątki:
 		spacePanel = new SimulatePanel(bodyList, coefficientsList);
 		Thread t = new Thread(spacePanel);
 		t.start();
@@ -199,6 +199,7 @@ public class SimFrame extends JFrame implements Runnable {
 		t3.start();
 		t3.suspend();
 		
+		// panel z guzikami i ze wszystkimi danymi
 		menuPanel = new JPanel();
 		menuPanel.setBorder(BorderFactory.createLineBorder(Color.white, 3, true));
 		
@@ -209,12 +210,13 @@ public class SimFrame extends JFrame implements Runnable {
 			
 			if(bodies.getSelectedItem() == bodyList.get(i).getName()) {
 			
-				mass = new JLabel("Masa: " + bodyList.get(i).getMass());
-				charge = new JLabel("Ładunek: " + String.format("%.0f", bodyList.get(i).getCharge()));
-				xx = new JLabel("X: " + String.format("%.0f", bodyList.get(i).getX()));
-				yy = new JLabel("Y: " + String.format("%.0f", bodyList.get(i).getY()));
-				vxx = new JLabel("Vx: " + String.format("%.2f", bodyList.get(i).getVx()));
-				vyy = new JLabel("Vy: " + String.format("%.2f", bodyList.get(i).getVy()));
+				// ustawiamy wszystkie dane w labelach ( gdy ten frame się włącza po raz piewrszy )
+				mass = new JLabel("Masa: " + bodyList.get(i).getMass()+" [kg]");
+				charge = new JLabel("Ładunek: " + String.format("%.0f", bodyList.get(i).getCharge())+" [--]");
+				xx = new JLabel("X: " + String.format("%.0f", bodyList.get(i).getX())+" [m]");
+				yy = new JLabel("Y: " + String.format("%.0f", bodyList.get(i).getY())+" [m]");
+				vxx = new JLabel("Vx: " + String.format("%.2f", bodyList.get(i).getVx())+" [m/s]");
+				vyy = new JLabel("Vy: " + String.format("%.2f", bodyList.get(i).getVy())+" [m/s]");
 				
 			}
 		
@@ -228,12 +230,14 @@ public class SimFrame extends JFrame implements Runnable {
 					
 					if( bodies.getSelectedItem() == spacePanel.listBody.get(i).getName()) {
 					
-						mass.setText("Masa: " + spacePanel.listBody.get(i).getMass()); 
-						charge.setText("Ładunek: " + spacePanel.listBody.get(i).getCharge());
-						xx.setText("X: "+ String.format("%.0f", spacePanel.listBody.get(i).getX())); 
-						yy.setText("Y: " + String.format("%.0f", spacePanel.listBody.get(i).getY()));
-						vxx.setText("Vy: " + String.format("%.2f", spacePanel.listBody.get(i).getVx())); 
-						vyy.setText("Vx: " + String.format("%.2f", spacePanel.listBody.get(i).getVy()));
+						// ustawiamy wszystkie dane w labelach ( przy zmianie "itemu" w jcomboboxie )
+						
+						mass.setText("Masa: " + spacePanel.listBody.get(i).getMass()+" [kg]"); 
+						charge.setText("Ładunek: " + spacePanel.listBody.get(i).getCharge()+" [--]");
+						xx.setText("X: "+ String.format("%.0f", spacePanel.listBody.get(i).getX())+" [m]"); 
+						yy.setText("Y: " + String.format("%.0f", spacePanel.listBody.get(i).getY())+" [m]");
+						vxx.setText("Vy: " + String.format("%.2f", spacePanel.listBody.get(i).getVx())+" [m/s]"); 
+						vyy.setText("Vx: " + String.format("%.2f", spacePanel.listBody.get(i).getVy())+" [m/s]");
 						
 					}
 					
@@ -244,19 +248,19 @@ public class SimFrame extends JFrame implements Runnable {
 				for(int i = 0; i < spacePanel.satList.size(); i++) {
 					
 					
-					System.out.println(bodies.getSelectedItem() + " przed " + spacePanel.satList.get(i).getName());
+					
 					
 					if( Objects.equals(bodies.getSelectedItem(), spacePanel.satList.get(i).getName()) ) {
 						
 						
-						System.out.println(bodies.getSelectedItem() + " % " + spacePanel.satList.get(i).getName());
+						// to samo dla satelit
 						
-						mass.setText("Masa: " + spacePanel.satList.get(i).getMass()); 
-						charge.setText("Ładunek: " + spacePanel.satList.get(i).getCharge());
-						xx.setText("X: "+ String.format("%.0f", spacePanel.satList.get(i).getX())); 
-						yy.setText("Y: " + String.format("%.0f", spacePanel.satList.get(i).getY()));
-						vxx.setText("Vy: " + String.format("%.2f", spacePanel.satList.get(i).getVx())); 
-						vyy.setText("Vx: " + String.format("%.2f", spacePanel.satList.get(i).getVy()));
+						mass.setText("Masa: " + spacePanel.satList.get(i).getMass()+" [kg]"); 
+						charge.setText("Ładunek: " + spacePanel.satList.get(i).getCharge()+" [--]");
+						xx.setText("X: "+ String.format("%.0f", spacePanel.satList.get(i).getX())+" [m]"); 
+						yy.setText("Y: " + String.format("%.0f", spacePanel.satList.get(i).getY())+" [m]");
+						vxx.setText("Vx: " + String.format("%.2f", spacePanel.satList.get(i).getVx())+" [m/s]"); 
+						vyy.setText("Vy: " + String.format("%.2f", spacePanel.satList.get(i).getVy())+" [m/s]");
 					}
 				}
 			}
@@ -284,7 +288,7 @@ public class SimFrame extends JFrame implements Runnable {
 		
 		menuPanel.add(vyy);
 
-		
+		// checkbox do "smugi" 
 		checkBox = new JCheckBox("Pokaż drogę");
 		checkBox.addActionListener(new ActionListener() {
 			
@@ -301,14 +305,14 @@ public class SimFrame extends JFrame implements Runnable {
 		
 		menuPanel.add(checkBox);
 		
-		sliderLabel = new JLabel("Prędkość symulacji:");
+		sliderLabel = new JLabel("Prędkość symulacji (przyspieszenie x):");
 		sliderLabel.setSize(2, 50);
 		menuPanel.add(sliderLabel);
 		
 		
 		timeSlider = new JSlider(JSlider.HORIZONTAL, SLIDER_MIN, SLIDER_MAX, SLIDER_INIT);
-		timeSlider.setMajorTickSpacing(1);
-		timeSlider.setPaintTicks(true);
+		timeSlider.setMajorTickSpacing(1); // majortick
+		timeSlider.setPaintTicks(true);    // przedzialki
 		timeSlider.setPaintLabels(true);
 		timeSlider.addChangeListener(new ChangeListener() {
 			
@@ -328,12 +332,11 @@ public class SimFrame extends JFrame implements Runnable {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				 
-				
 				 t.suspend();
 				 t3.suspend();
 				 start.setText("Start");
-				 //lista nazw satelit
 				 
+				 // "model" combobox'a: 
 				 DefaultComboBoxModel model = (DefaultComboBoxModel) bodies.getModel();
 				 
 				 
@@ -343,8 +346,9 @@ public class SimFrame extends JFrame implements Runnable {
 					 SatNames.add(spacePanel.satList.get(i).getName());
 					 
 				 }
+				 
 				 SubFrame satframe = new SubFrame(0,1,SatNames);
-				 satframe.pole_nazwy.setText("SAT"+ (spacePanel.satList.size()+1));
+				 satframe.nameField.setText("SAT"+ (spacePanel.satList.size()+1));
 				 satframe.setVisible(true);
 				 
 				 
@@ -367,21 +371,21 @@ public class SimFrame extends JFrame implements Runnable {
 					
 					@Override
 					public void windowClosed(WindowEvent e) {
-						
 						if(satframe.j == 1) {
-							if(counterSat==9) {
-								 addSatelite.setEnabled(false);
-							}
-							counterSat++;
-							System.out.println("winClosed");
-							System.out.println(counterSat);
-							spacePanel.satList.add(
-								new	Body(satframe.pole_nazwy.getText(), Double.valueOf(satframe.pole_wagi.getText()), 
-										Double.valueOf(satframe.pole_ladunku.getText()), satframe.kol, Integer.valueOf(satframe.pole_wsp_X.getText()),
-										Integer.valueOf(satframe.pole_wsp_Y.getText()) ,Double.valueOf(satframe.pole_pred_X.getText()), Double.valueOf(satframe.pole_pred_Y.getText()), satframe.j)
+						if(counterSat==9) {
+							addSatelite.setEnabled(false);
+						}	
+						counterSat++;
+						
+						// dodanie satelity za pomocą SubFrame'a
+						spacePanel.satList.add(
+								new	Body(satframe.nameField.getText(), Double.valueOf(satframe.massField.getText()), 
+										Double.valueOf(satframe.chargeField.getText()), satframe.col, Integer.valueOf(satframe.xField.getText()),
+										Integer.valueOf(satframe.yField.getText()) ,Double.valueOf(satframe.vxField.getText()), Double.valueOf(satframe.vyField.getText()), satframe.j)
 								);
 							
-							model.addElement(satframe.pole_nazwy.getText());
+							model.addElement(satframe.nameField.getText()); // dodanie satelity to JComboBox'a
+							
 							repaint();
 						}	
 					}
@@ -399,23 +403,11 @@ public class SimFrame extends JFrame implements Runnable {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				int j = 0;
+				int j = 0; // licznik który to "opuszczania" drugiego warunku/pętli
 				
 				if(start.getText() == "Start") {
-					
-					/*
-					try {
-						//spacePanel.setSeconds(secFrame);
-						//spacePanel.setMinutes(minFrame);
-						
-						
-						//spacePanel.timer.scheduleAtFixedRate(spacePanel.taskTimer, 10, 10);
-					}
-					catch(IllegalStateException e) {
-						e.printStackTrace();
-					}
-					*/
-					
+				
+					// włączenie wszystkich wątków
 					t.resume();
 					t2.resume();
 					t3.resume();
@@ -425,8 +417,7 @@ public class SimFrame extends JFrame implements Runnable {
 				
 				if(start.getText() == "Stop" && j == 0) {
 					
-					//secFrame = spacePanel.getSeconds();
-					//minFrame = spacePanel.getMinutes();
+					// wyłączenie wszystkich wątków
 					
 					t.suspend();
 					t2.suspend();
@@ -450,20 +441,26 @@ public class SimFrame extends JFrame implements Runnable {
 		};
 		exit.addActionListener(exitListener);
 		
+		
+		
+		//dodanie wszystkich guzików do panelu za pomocą layout "GridBagLayout" - glButtons
+		
 		panelButtons = new JPanel();
 		panelButtons.setLayout(new GridBagLayout());
 		
-		glButtons.insets = new Insets(2,2,2,2);
+		glButtons.insets = new Insets(2,2,2,2); // odległości między obiektami ( guzikami ), z góry, z lewej, z dołu , z prawej
 		
+		
+		// gridx to wspolrzedna x, a gridy to y, gridwidth to szerokosc
 		glButtons.gridx = 0;
 		glButtons.gridy = 0;
 		glButtons.gridwidth = 2;
-		glButtons.fill = GridBagConstraints.HORIZONTAL;
+		glButtons.fill = GridBagConstraints.HORIZONTAL; // wypelnienie guzika "w szerokości"
 		panelButtons.add(addSatelite, glButtons);
 		
 		glButtons.gridx = 0;
 		glButtons.gridy = 1;
-		glButtons.gridwidth = 1;
+		glButtons.gridwidth = 1; // ustawienie szerokosci na 1
 		panelButtons.add(start, glButtons);
 		
 		glButtons.gridx = 1;
@@ -476,18 +473,19 @@ public class SimFrame extends JFrame implements Runnable {
 		
 		glMain.setHgap(1);
 		glMain.setVgap(1);
-		menuPanel.setLayout(glMain);
+		menuPanel.setLayout(glMain); // glMain to GridLayout(12,1) 
 		
 		this.add(spacePanel, BorderLayout.CENTER);
 		this.add(menuPanel, BorderLayout.LINE_END);
 		
 	}
 
+	// metoda run do zmieniania danych w labelach w trakcie trwania symulacji 
 	@Override
 	public void run() {
 		while(true) {
 			try {
-				Thread.sleep(18/timeSlider.getValue());
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -495,13 +493,12 @@ public class SimFrame extends JFrame implements Runnable {
 			for(int i = 0; i < spacePanel.listBody.size(); i++) {
 				
 				if(bodies.getSelectedItem() == spacePanel.listBody.get(i).getName()) {
-				
-					//mass.setText("Masa: " + spacePanel.listBody.get(i).getMass()); 
-					xx.setText("X: "+ String.format("%.0f", spacePanel.listBody.get(i).getX())); 
-					yy.setText("Y: " + String.format("%.0f", spacePanel.listBody.get(i).getY()));
-					vxx.setText("Vy: " + String.format("%.2f", spacePanel.listBody.get(i).getVx())); 
-					vyy.setText("Vx: " + String.format("%.2f", spacePanel.listBody.get(i).getVy()));
 					
+					
+					xx.setText("X: "+ String.format("%.0f", spacePanel.listBody.get(i).getX())+" [m]"); 
+					yy.setText("Y: " + String.format("%.0f", spacePanel.listBody.get(i).getY())+" [m]");
+					vxx.setText("Vy: " + String.format("%.2f", spacePanel.listBody.get(i).getVx())+" [m/s]"); 
+					vyy.setText("Vx: " + String.format("%.2f", spacePanel.listBody.get(i).getVy())+" [m/s]");
 					
 				}
 			}
@@ -509,18 +506,16 @@ public class SimFrame extends JFrame implements Runnable {
 			for(int i = 0; i < spacePanel.satList.size(); i++) {
 				
 				
-				//System.out.println(bodies.getSelectedItem() + " przed " + spacePanel.satList.get(i).getName());
+				
 				
 				if(Objects.equals(bodies.getSelectedItem(), spacePanel.satList.get(i).getName())) {
 					
-				//	System.out.println(bodies.getSelectedItem() + " % " + spacePanel.satList.get(i).getName());
-					
-					mass.setText("Masa: " + spacePanel.satList.get(i).getMass()); 
-					charge.setText("Ładunek: " + spacePanel.satList.get(i).getCharge());
-					xx.setText("X: "+ String.format("%.0f", spacePanel.satList.get(i).getX())); 
-					yy.setText("Y: " + String.format("%.0f", spacePanel.satList.get(i).getY()));
-					vxx.setText("Vy: " + String.format("%.2f", spacePanel.satList.get(i).getVx())); 
-					vyy.setText("Vx: " + String.format("%.2f", spacePanel.satList.get(i).getVy()));
+					mass.setText("Masa: " + spacePanel.satList.get(i).getMass()+" [kg]"); 
+					charge.setText("Ładunek: " + spacePanel.satList.get(i).getCharge()+" [--]");
+					xx.setText("X: "+ String.format("%.0f", spacePanel.satList.get(i).getX())+" [m]"); 
+					yy.setText("Y: " + String.format("%.0f", spacePanel.satList.get(i).getY())+" [m]");
+					vxx.setText("Vx: " + String.format("%.2f", spacePanel.satList.get(i).getVx())+" [m/s]"); 
+					vyy.setText("Vy: " + String.format("%.2f", spacePanel.satList.get(i).getVy())+" [m/s]");
 				}
 			}
 			

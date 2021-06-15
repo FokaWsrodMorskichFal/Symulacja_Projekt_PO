@@ -30,10 +30,11 @@ public class SimulatePanel extends JPanel implements Runnable{
 	public ArrayList<Body> satList;
 	public ArrayList<Body> copySatList;
 	
+	SimulatePanel it;
 	
 	int counter=0;
 	int lenBody;
-	int time=3;
+	int time=1;
 	int nebula=63;
 	double seconds = 0.00;
     int minutes = 0;
@@ -55,6 +56,8 @@ public class SimulatePanel extends JPanel implements Runnable{
 		
 		pointSatMatrix = new ArrayList<ArrayList<Point>>();
 		pointBodyMatrix = new ArrayList<ArrayList<Point>>();
+		
+		it = this;
 		
 		for(int i=0; i<10; i++) {
 			pointSatMatrix.add(new ArrayList<Point>());
@@ -165,13 +168,15 @@ public class SimulatePanel extends JPanel implements Runnable{
 	Timer timer = new Timer();
     TimerTask taskTimer = new TimerTask() {
             public void run () {
+            	int t;
             	while(true) {
+            		t=it.time;
 	            	try {
-						Thread.sleep(10);
+						Thread.sleep(20/t);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-	                seconds += 0.01;
+	                seconds += 0.02;
 	                if(seconds > 60) {
 	                    minutes ++;
 	                    seconds = 0.0;
@@ -185,7 +190,7 @@ public class SimulatePanel extends JPanel implements Runnable{
 	public void run() {
 		while(true) {
 			try {
-				Thread.sleep(18/time);
+				Thread.sleep(20/time);		
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

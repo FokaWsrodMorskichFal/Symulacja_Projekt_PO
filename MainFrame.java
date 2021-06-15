@@ -469,7 +469,6 @@ public class MainFrame extends JFrame{
             		   a += Character.toString(txt.get(j));
             		   
             	   }
-            	   System.out.println(a);
             	   coefs.add(Double.valueOf(a));
             	   
             	   counter2 += 2;
