@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -21,9 +22,10 @@ public class SubFrame2 extends JFrame {
 	public ArrayList<JTextField> textFieldList;
 	public ArrayList<JLabel> labelWspList;
 	public ArrayList<JLabel> labelWykList;
+	public ArrayList<Double> coefsList;
 	
 	public SubFrame2(int l_czlonow, ArrayList<Body> constructor_list) {
-		this.setSize(new Dimension(390, (l_czlonow+2)*35));
+		this.setSize(new Dimension(390, (l_czlonow+2)*35+20));
 		this.setLayout(new GridLayout(l_czlonow+2, 1));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Wyra¿enie na si³ê");
@@ -34,6 +36,7 @@ public class SubFrame2 extends JFrame {
 		textFieldList = new ArrayList<JTextField>();
 		labelWspList = new ArrayList<JLabel>();
 		labelWykList = new ArrayList<JLabel>();
+		coefsList = new ArrayList<Double>();
 		
 		JPanel podaj = new JPanel();
 		JLabel podawanie = new JLabel("Podaj wspó³czynniki:", JLabel.LEFT);
@@ -84,8 +87,18 @@ public class SubFrame2 extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dispose();
-				zamkniecie=true;
+				try{	
+					//coefsList.add();
+					for(int i=0; i<2*l_czlonow; i++) {
+						coefsList.add(Double.valueOf(textFieldList.get(i).getText()));
+					}
+					dispose();
+					zamkniecie=true;
+					
+				}
+				catch(NumberFormatException exception){
+				     JOptionPane.showMessageDialog(null, "Z³y format parametrów!","B³¹d!",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		guzik_panel.add(dalej);

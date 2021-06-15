@@ -15,8 +15,8 @@ public class Tlo extends JPanel {
 	Image bgImage;
 	BufferedImage bImage;
 	
-	public Tlo() {
-		File inputFile = new File("src/bg.jpg");
+	public Tlo(String path) {
+		File inputFile = new File(path);
 		try {
 			bImage = ImageIO.read(inputFile);
 		} catch(IOException ex) {

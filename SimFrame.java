@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Objects;
+
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -46,6 +49,8 @@ public class SimFrame extends JFrame implements Runnable {
 	
 	int stan_slider;
 
+	int counterSat=0;
+	
 	JComboBox bodies;
 	
 	String [] bodyString;
@@ -79,14 +84,10 @@ public class SimFrame extends JFrame implements Runnable {
 	
 	JFrame to;
 	
-	Thread t;
-	Thread t2;
-	Thread t3;
-	
 	GridBagConstraints glButtons = new GridBagConstraints();
 	GridLayout glMain = new GridLayout(12,1);
 	ArrayList<String> SatNames;
-	ArrayList<Double> coefList;
+	ArrayList<Double> coefList = new ArrayList<Double>();
 	
 	public SimFrame(ArrayList<Body> bodyList, ArrayList<Double> coefficientsList) throws HeadlessException {
 		
@@ -97,8 +98,10 @@ public class SimFrame extends JFrame implements Runnable {
 		to=new JFrame();
 		to=this;
 		
+		
 		coefList=coefficientsList;
-		ArrayList<Body> initCond=new ArrayList<>(bodyList);
+        ArrayList<Body> initCond=new ArrayList<>(bodyList); 
+		
 		SatNames = new ArrayList<String>();
 		
 		// 		MENU 		//
@@ -119,45 +122,44 @@ public class SimFrame extends JFrame implements Runnable {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String save="";
-				
-				//pierwsza linijka
-				save+=initCond.size();
-				save+=" ";
-				save+=coefList.size();
-				save+='\n';
-				
-				//linijka druga
-				save+="Nazwa	masa	ladunek	color	x	y	vx 	vy\n";
-				
-				//linijki z parametrami ciał
-				for(int i=0; i<initCond.size(); i++) {
-					save+=String.format("\"%s\"\t\"%s\"\t\"%s\"\t\"%d %d %d\"\t\"%d\"\t\"%d\"\t\"%s\"\t\"%s\"\n", initCond.get(i).getName(), initCond.get(i).mass, initCond.get(i).charge, initCond.get(i).getColor().getRed(), initCond.get(i).getColor().getGreen(), initCond.get(i).getColor().getBlue(), (int) initCond.get(i).x, (int) initCond.get(i).y, initCond.get(i).vx, initCond.get(i).vy);																		
-				}
-				//linijka ze współczynnikami
-				for(int i=0;i<spacePanel.coefsList.size();i++) {
-					save+=String.format("\"%s\" ", coefList.get(i));
-				}
-				System.out.println(save);
-				
-				JFileChooser fileChooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter(null, "txt");
-				fileChooser.setFileFilter(filter);
-				int returnVal = fileChooser.showOpenDialog(getParent());
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-				    	System.out.println("You chose to open this file: "+fileChooser.getSelectedFile().getName());
-				}
-				
-				try {
-					OutputStream outputStream = new FileOutputStream(fileChooser.getSelectedFile().getAbsolutePath());//fileChooser.getSelectedFile().getAbsolutePath()
-					OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-					outputStreamWriter.write(save);
-					outputStreamWriter.close();
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				
+                
+                //pierwsza linijka
+                save+=initCond.size();
+                save+=" ";
+                save+=coefList.size();
+                save+='\n';
+                
+                //linijka druga
+                save+="Nazwa    masa    ladunek    color    x    y    vx     vy\n";
+                
+                //linijki z parametrami ciał
+                for(int i=0; i<initCond.size(); i++) {
+                    save+=String.format("\"%s\"\t\"%s\"\t\"%s\"\t\"%d %d %d\"\t\"%d\"\t\"%d\"\t\"%s\"\t\"%s\"\n", initCond.get(i).getName(), initCond.get(i).mass, initCond.get(i).charge, initCond.get(i).getColor().getRed(), initCond.get(i).getColor().getGreen(), initCond.get(i).getColor().getBlue(), (int) initCond.get(i).x, (int) initCond.get(i).y, initCond.get(i).vx, initCond.get(i).vy);                                                                        
+                }
+                //linijka ze współczynnikami
+                for(int i=0;i<spacePanel.coefsList.size();i++) {
+                    save+=String.format("\"%s\" ", coefList.get(i));
+                }
+                System.out.println(save);
+                
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(null, "txt");
+                fileChooser.setFileFilter(filter);
+                int returnVal = fileChooser.showOpenDialog(getParent());
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                        System.out.println("You chose to open this file: "+fileChooser.getSelectedFile().getName());
+                }
+                
+                try {
+                    OutputStream outputStream = new FileOutputStream(fileChooser.getSelectedFile().getAbsolutePath());//fileChooser.getSelectedFile().getAbsolutePath()
+                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
+                    outputStreamWriter.write(save);
+                    outputStreamWriter.close();
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
 			} 
 		});
 		menu.add(save);
@@ -167,9 +169,6 @@ public class SimFrame extends JFrame implements Runnable {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				t.stop();
-				t2.stop();
-				t3.stop();
 				to.dispose();
 				to=new MainFrame();
 				to.setVisible(true);
@@ -188,15 +187,15 @@ public class SimFrame extends JFrame implements Runnable {
 		
 		
 		spacePanel = new SimulatePanel(bodyList, coefficientsList);
-		t = new Thread(spacePanel);
+		Thread t = new Thread(spacePanel);
 		t.start();
 		t.suspend();
 		
-		t2 = new Thread(this);
+		Thread t2 = new Thread(this);
 		t2.start();
 		t2.suspend();
 		
-		t3 = new Thread(spacePanel.taskTimer);
+		Thread t3 = new Thread(spacePanel.taskTimer);
 		t3.start();
 		t3.suspend();
 		
@@ -227,7 +226,7 @@ public class SimFrame extends JFrame implements Runnable {
 				
 				for(int i = 0; i < bodyList.size(); i++) {
 					
-					if(bodies.getSelectedItem() == spacePanel.listBody.get(i).getName()) {
+					if( bodies.getSelectedItem() == spacePanel.listBody.get(i).getName()) {
 					
 						mass.setText("Masa: " + spacePanel.listBody.get(i).getMass()); 
 						charge.setText("Ładunek: " + spacePanel.listBody.get(i).getCharge());
@@ -236,6 +235,28 @@ public class SimFrame extends JFrame implements Runnable {
 						vxx.setText("Vy: " + String.format("%.2f", spacePanel.listBody.get(i).getVx())); 
 						vyy.setText("Vx: " + String.format("%.2f", spacePanel.listBody.get(i).getVy()));
 						
+					}
+					
+					
+					
+				}
+				
+				for(int i = 0; i < spacePanel.satList.size(); i++) {
+					
+					
+					System.out.println(bodies.getSelectedItem() + " przed " + spacePanel.satList.get(i).getName());
+					
+					if( Objects.equals(bodies.getSelectedItem(), spacePanel.satList.get(i).getName()) ) {
+						
+						
+						System.out.println(bodies.getSelectedItem() + " % " + spacePanel.satList.get(i).getName());
+						
+						mass.setText("Masa: " + spacePanel.satList.get(i).getMass()); 
+						charge.setText("Ładunek: " + spacePanel.satList.get(i).getCharge());
+						xx.setText("X: "+ String.format("%.0f", spacePanel.satList.get(i).getX())); 
+						yy.setText("Y: " + String.format("%.0f", spacePanel.satList.get(i).getY()));
+						vxx.setText("Vy: " + String.format("%.2f", spacePanel.satList.get(i).getVx())); 
+						vyy.setText("Vx: " + String.format("%.2f", spacePanel.satList.get(i).getVy()));
 					}
 				}
 			}
@@ -308,15 +329,23 @@ public class SimFrame extends JFrame implements Runnable {
 			public void actionPerformed(ActionEvent e) {
 				 
 				 t.suspend();
+				 t3.suspend();
 				 start.setText("Start");
-				 
 				 //lista nazw satelit
+				 
+				 DefaultComboBoxModel model = (DefaultComboBoxModel) bodies.getModel();
+				 
+				 
+				 
 				 for(int i=0; i<spacePanel.satList.size(); i++) {
+					 
 					 SatNames.add(spacePanel.satList.get(i).getName());
+					 
 				 }
 				 SubFrame satframe = new SubFrame(0,1,SatNames);
 				 satframe.pole_nazwy.setText("SAT"+ (spacePanel.satList.size()+1));
 				 satframe.setVisible(true);
+				 
 				 
 				 satframe.addWindowListener(new WindowListener() {
 					
@@ -345,6 +374,8 @@ public class SimFrame extends JFrame implements Runnable {
 										Integer.valueOf(satframe.pole_wsp_Y.getText()) ,Double.valueOf(satframe.pole_pred_X.getText()), Double.valueOf(satframe.pole_pred_Y.getText()), satframe.j)
 								);
 							
+							model.addElement(satframe.pole_nazwy.getText());
+							counterSat++;
 							repaint();
 						}	
 					}
@@ -352,11 +383,12 @@ public class SimFrame extends JFrame implements Runnable {
 					@Override
 					public void windowActivated(WindowEvent e) {}
 				});
-				
+			
+				 if(counterSat==9) {
+					 addSatelite.setEnabled(false);
+				 }
 			}
 		});
-		
-		//menuPanel.add(addSatelite);
 		
 		start = new JButton("Start");
 		ActionListener startListener = new ActionListener() {
@@ -396,14 +428,7 @@ public class SimFrame extends JFrame implements Runnable {
 					t2.suspend();
 					t3.suspend();
 					start.setText("Start");
-					/*
-					for(int i=0; i<spacePanel.smuga; i++) {
-						System.out.println("pozycja "+i);
-						System.out.println(spacePanel.pointBodyMatrix.get(1).get(i).x);
-						System.out.println(spacePanel.pointBodyMatrix.get(1).get(i).y);
-					}
-					System.out.println(spacePanel.counter);
-					*/
+					
 				}
 				
 			}
@@ -474,6 +499,24 @@ public class SimFrame extends JFrame implements Runnable {
 					vyy.setText("Vx: " + String.format("%.2f", spacePanel.listBody.get(i).getVy()));
 					
 					
+				}
+			}
+			
+			for(int i = 0; i < spacePanel.satList.size(); i++) {
+				
+				
+				//System.out.println(bodies.getSelectedItem() + " przed " + spacePanel.satList.get(i).getName());
+				
+				if(Objects.equals(bodies.getSelectedItem(), spacePanel.satList.get(i).getName())) {
+					
+				//	System.out.println(bodies.getSelectedItem() + " % " + spacePanel.satList.get(i).getName());
+					
+					mass.setText("Masa: " + spacePanel.satList.get(i).getMass()); 
+					charge.setText("Ładunek: " + spacePanel.satList.get(i).getCharge());
+					xx.setText("X: "+ String.format("%.0f", spacePanel.satList.get(i).getX())); 
+					yy.setText("Y: " + String.format("%.0f", spacePanel.satList.get(i).getY()));
+					vxx.setText("Vy: " + String.format("%.2f", spacePanel.satList.get(i).getVx())); 
+					vyy.setText("Vx: " + String.format("%.2f", spacePanel.satList.get(i).getVy()));
 				}
 			}
 			

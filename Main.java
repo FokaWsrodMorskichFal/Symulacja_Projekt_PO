@@ -1,4 +1,4 @@
-package mainpack;
+package mainPack;
 
 import javax.swing.SwingUtilities;
 
