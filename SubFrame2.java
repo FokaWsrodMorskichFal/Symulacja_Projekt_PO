@@ -25,7 +25,7 @@ public class SubFrame2 extends JFrame {
 	public ArrayList<Double> coefsList;
 	
 	public SubFrame2(int l_czlonow, ArrayList<Body> constructor_list) {
-		this.setSize(new Dimension(390, (l_czlonow+2)*35));
+		this.setSize(new Dimension(390, (l_czlonow+2)*35+20));
 		this.setLayout(new GridLayout(l_czlonow+2, 1));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Wyra¿enie na si³ê");

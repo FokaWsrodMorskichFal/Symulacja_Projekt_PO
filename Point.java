@@ -8,4 +8,8 @@ public class Point {
 		x=a;
 		y=b;
 	}
+	public Point aktual(int a, int b) {
+		Point tmp=new Point(a, b);
+		return tmp;
+	}
 }

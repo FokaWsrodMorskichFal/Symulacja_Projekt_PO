@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Objects;
+
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
@@ -21,22 +23,35 @@ public class SubFrame extends JFrame {
 
 	public ArrayList<JPanel> panelList;
 	public ArrayList<String> liczebniki;
+	public ArrayList<String> nameList;
 	public ArrayList<Body> listBody;
 	public ArrayList<Color> colList;
 	int j;
 	int l_cial;
 	Color kol;
+	Boolean CheckNazwy;
 	
-	public SubFrame(int kolej, int l_cial) {
+	JTextField pole_nazwy;
+	JTextField pole_wagi;
+	JTextField pole_ladunku;
+	JTextField pole_wsp_X;
+	JTextField pole_wsp_Y;
+	JTextField pole_pred_X;
+	JTextField pole_pred_Y;
+	
+	public SubFrame(int kolej, int l_cial, ArrayList<String> names) {
 		this.setSize(new Dimension(300, 450));
 		this.setLayout(new GridLayout(10 ,1));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Parametry");
 		
+		nameList = new ArrayList<String>();
 		panelList = new ArrayList<JPanel>();
 		liczebniki = new ArrayList<String>();
 		listBody = new ArrayList<Body>();
 		colList = new ArrayList<Color>();
+		
+		CheckNazwy=false;
 		
 		j=kolej;
 		this.l_cial=l_cial;
@@ -50,16 +65,16 @@ public class SubFrame extends JFrame {
 		liczebniki.add("drugiego");
 		liczebniki.add("trzeciego");
 		liczebniki.add("czwartego");
-		liczebniki.add("piπtego");
-		liczebniki.add("szÛstego");
+		liczebniki.add("piƒÖtego");
+		liczebniki.add("sz√≥stego");
 		liczebniki.add("siudmego");
-		liczebniki.add("Ûsmego");
+		liczebniki.add("√≥smego");
 		
-		JLabel parametry = new JLabel("Podaj parametry "+liczebniki.get(j)+" cia≥a:", JLabel.CENTER);
+		JLabel parametry = new JLabel("Podaj parametry "+liczebniki.get(j)+" cia≈Ça:", JLabel.CENTER);
 		panelList.get(0).add(parametry);
 		
 		JLabel nazwa = new JLabel("Nazwa:", JLabel.CENTER);
-		JTextField pole_nazwy = new JTextField("Obiekt "+String.format("%d", j+1));
+		pole_nazwy = new JTextField("Obiekt "+String.format("%d", j+1));
 		pole_nazwy.setFont(new Font("DialogInput", 2, 17));
 		JLabel puste_nazwa = new JLabel(" ");
 		panelList.get(1).add(nazwa);
@@ -98,7 +113,7 @@ public class SubFrame extends JFrame {
 		panelList.get(2).add(puste_kolor2);
 
 		JLabel waga = new JLabel("Masa:", JLabel.CENTER); //masa
-		JTextField pole_wagi = new JTextField();
+		pole_wagi = new JTextField();
 		pole_wagi.setFont(new Font("DialogInput", 2, 17));
 		JLabel puste_waga = new JLabel(" ");
 		panelList.get(3).add(waga);
@@ -107,16 +122,16 @@ public class SubFrame extends JFrame {
 		
 		//charge
 		
-		JLabel ≥adunek = new JLabel("£adunek:", JLabel.CENTER); //masa
-		JTextField pole_≥adunku = new JTextField();
-		pole_wagi.setFont(new Font("DialogInput", 2, 17));
-		JLabel puste_≥adunek = new JLabel(" ");
-		panelList.get(4).add(≥adunek);
-		panelList.get(4).add(pole_≥adunku);
-		panelList.get(4).add(puste_≥adunek);
+		JLabel ladunek = new JLabel("≈Åadunek:", JLabel.CENTER); //masa
+		pole_ladunku = new JTextField();
+		pole_ladunku.setFont(new Font("DialogInput", 2, 17));
+		JLabel puste_ladunek = new JLabel(" ");
+		panelList.get(4).add(ladunek);
+		panelList.get(4).add(pole_ladunku);
+		panelList.get(4).add(puste_ladunek);
 		
 		JLabel wsp_X = new JLabel("X:", JLabel.CENTER);
-		JTextField pole_wsp_X = new JTextField();
+		pole_wsp_X = new JTextField();
 		pole_wsp_X.setFont(new Font("DialogInput", 2, 17));
 		JLabel puste_wsp_X = new JLabel(" ");
 		panelList.get(5).add(wsp_X);
@@ -124,7 +139,7 @@ public class SubFrame extends JFrame {
 		panelList.get(5).add(puste_wsp_X);
 		
 		JLabel wsp_Y = new JLabel("Y:", JLabel.CENTER);
-		JTextField pole_wsp_Y = new JTextField();
+		pole_wsp_Y = new JTextField();
 		pole_wsp_Y.setFont(new Font("DialogInput", 2, 17));
 		JLabel puste_wsp_Y = new JLabel(" ");
 		panelList.get(6).add(wsp_Y);
@@ -132,7 +147,7 @@ public class SubFrame extends JFrame {
 		panelList.get(6).add(puste_wsp_Y);
 		
 		JLabel pred_X = new JLabel("V_x:", JLabel.CENTER);
-		JTextField pole_pred_X = new JTextField();
+		pole_pred_X = new JTextField();
 		pole_pred_X.setFont(new Font("DialogInput", 2, 17));
 		JLabel puste_pred_X = new JLabel(" ");
 		panelList.get(7).add(pred_X);
@@ -140,13 +155,13 @@ public class SubFrame extends JFrame {
 		panelList.get(7).add(puste_pred_X);
 		
 		JLabel pred_Y = new JLabel("V_y:", JLabel.CENTER);
-		JTextField pole_pred_Y = new JTextField();
+		pole_pred_Y = new JTextField();
 		pole_pred_Y.setFont(new Font("DialogInput", 2, 17));
 		JLabel puste_pred_Y = new JLabel(" ");
 		panelList.get(8).add(pred_Y);
 		panelList.get(8).add(pole_pred_Y);
 		panelList.get(8).add(puste_pred_Y);
-		
+			
 		JPanel guziki = new JPanel();
 		guziki.setLayout(new FlowLayout());
 		JButton dalej = new JButton("Dalej");
@@ -154,29 +169,44 @@ public class SubFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try{	
-					listBody.add(
-							new	Body(pole_nazwy.getText(), Double.valueOf(pole_wagi.getText()), Double.valueOf(pole_≥adunku.getText()), kol, Integer.valueOf(pole_wsp_X.getText()),
-								Integer.valueOf(pole_wsp_Y.getText()) ,Double.valueOf(pole_pred_X.getText()), Double.valueOf(pole_pred_Y.getText()), j)
-						);
-					if(j < l_cial - 1) {
-						j++;
-						pole_nazwy.setText("Obiekt "+String.format("%d", j+1));
-						pole_wagi.setText(null);
-						pole_≥adunku.setText(null);
-						pole_wsp_X.setText(null);
-						pole_wsp_Y.setText(null);
-						pole_pred_X.setText(null);
-						pole_pred_Y.setText(null);
-						parametry.setText("Podaj parametry "+liczebniki.get(j)+" cia≥a:");
-						kol=colList.get(j);
+					for(int i=0; i<j; i++) {
+						System.out.println(listBody.get(i).name);
+						System.out.println(pole_nazwy.getText());
+						System.out.println(Objects.equals(pole_nazwy.getText(), listBody.get(i).name));
+						if(Objects.equals(pole_nazwy.getText(), listBody.get(i).name)) {
+							CheckNazwy=true;
+							break;
+						}else {
+							CheckNazwy=false;
+						}
+					}
+					if(CheckNazwy==false) {
+						listBody.add(
+								new	Body(pole_nazwy.getText(), Double.valueOf(pole_wagi.getText()), Double.valueOf(pole_ladunku.getText()), kol, Integer.valueOf(pole_wsp_X.getText()),
+									Integer.valueOf(pole_wsp_Y.getText()) ,Double.valueOf(pole_pred_X.getText()), Double.valueOf(pole_pred_Y.getText()), j)
+							);
+						if(j < l_cial - 1) {
+							j++;
+							pole_nazwy.setText("Obiekt "+String.format("%d", j+1));
+							pole_wagi.setText(null);
+							pole_ladunku.setText(null);
+							pole_wsp_X.setText(null);
+							pole_wsp_Y.setText(null);
+							pole_pred_X.setText(null);
+							pole_pred_Y.setText(null);
+							parametry.setText("Podaj parametry "+liczebniki.get(j)+" cia≈Ça:");
+							kol=colList.get(j);
+						}else {
+							j++;
+							dispose();
+						}
 					}else {
-						j++;
-						dispose();
+						JOptionPane.showMessageDialog(null, "Ta nazwa obiektu zosta≈Ça ju≈º u≈ºyta","B≈ÇƒÖd!",JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				
 				catch(NumberFormatException exception){
-				     JOptionPane.showMessageDialog(null, "Z≥y format parametrÛw!","B≥πd!",JOptionPane.ERROR_MESSAGE);
+				     JOptionPane.showMessageDialog(null, "Z≈Çy format parametr√≥w!","B≈ÇƒÖd!",JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		};
@@ -189,25 +219,3 @@ public class SubFrame extends JFrame {
 		this.add(guziki);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

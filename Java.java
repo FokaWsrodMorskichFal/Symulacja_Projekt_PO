@@ -1,9 +1,19 @@
 package mainPack;
 
+import java.awt.Color;
+
 public class Java {
 
+	Color kolor;
+	
+	public Java() {
+		kolor=new Color(102, 214, 40);
+		System.out.println(kolor);
+		//kolor.
+	}
+	
 	public static void main(String[] args) {
-		System.out.println(Math.pow(5, -2));
+		Java j = new Java();
 	}
 
 }

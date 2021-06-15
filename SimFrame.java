@@ -10,6 +10,8 @@ import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -26,11 +28,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
-public class SimFrame extends JFrame {
+public class SimFrame extends JFrame implements Runnable {
 	
 	static final int SLIDER_MIN = 1;
 	static final int SLIDER_MAX = 5;
 	static final int SLIDER_INIT = 3;
+	
+	
 	
 	int stan_slider;
 
@@ -63,6 +67,8 @@ public class SimFrame extends JFrame {
 	JMenuItem save;
 	JMenuItem neww;
 	
+	JFrame to;
+	
 	GridBagConstraints glButtons = new GridBagConstraints();
 	GridLayout glMain = new GridLayout(12,1);
 	
@@ -72,6 +78,8 @@ public class SimFrame extends JFrame {
 		this.setSize(new Dimension(1624, 1000));
 		this.setTitle("Symulacja ruchu ciał‚ pod wpływem siły centralnej");
 		stan_slider=2;
+		to=new JFrame();
+		to=this;
 		
 		// 		MENU 		//
 		
@@ -100,7 +108,9 @@ public class SimFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//przejście do początkowego MainFrame i program zaczyna działać na nowo
+				to.dispose();
+				to=new MainFrame();
+				to.setVisible(true);
 			} 
 		});
 		menu.add(neww);
@@ -119,6 +129,9 @@ public class SimFrame extends JFrame {
 		t.start();
 		t.suspend();
 		
+		Thread t2 = new Thread(this);
+		t2.start();
+		t2.suspend();
 		
 		menuPanel = new JPanel();
 		menuPanel.setBorder(BorderFactory.createLineBorder(Color.white, 3, true));
@@ -145,13 +158,13 @@ public class SimFrame extends JFrame {
 				
 				for(int i = 0; i < bodyList.size(); i++) {
 					
-					if(bodies.getSelectedItem() == bodyList.get(i).getName()) {
+					if(bodies.getSelectedItem() == spacePanel.listBody.get(i).getName()) {
 					
-						mass.setText("Waga: " + bodyList.get(i).getMass()); 
-						xx.setText("X: "+ bodyList.get(i).getX()); 
-						yy.setText("Y: " + bodyList.get(i).getY());
-						vxx.setText("Vy: " + bodyList.get(i).getVx()); 
-						vyy.setText("Vx: " + bodyList.get(i).getVy());
+						mass.setText("Waga: " + spacePanel.listBody.get(i).getMass()); 
+						xx.setText("X: "+ spacePanel.listBody.get(i).getX()); 
+						yy.setText("Y: " + spacePanel.listBody.get(i).getY());
+						vxx.setText("Vy: " + spacePanel.listBody.get(i).getVx()); 
+						vyy.setText("Vx: " + spacePanel.listBody.get(i).getVy());
 						
 					}
 				}
@@ -176,9 +189,21 @@ public class SimFrame extends JFrame {
 		
 		
 		menuPanel.add(vyy);
-		
+
 		
 		checkBox = new JCheckBox("Pokaż drogę");
+		checkBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(spacePanel.smuga_bool==true) {
+					spacePanel.smuga_bool=false;
+				}else {
+					spacePanel.smuga_bool=true;
+				}
+				repaint();
+			}
+		});
 		
 		menuPanel.add(checkBox);
 		
@@ -204,6 +229,55 @@ public class SimFrame extends JFrame {
 		menuPanel.add(timeSlider);
 		
 		addSatelite = new JButton("Dodaj satelitę");
+		addSatelite.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 
+				 t.suspend();
+				 start.setText("Start");
+				 SubFrame satframe = new SubFrame(0,1);
+				 satframe.pole_nazwy.setText("SAT"+ (spacePanel.satList.size()+1));
+				 satframe.setVisible(true);
+				 
+				 satframe.addWindowListener(new WindowListener() {
+					
+					@Override
+					public void windowOpened(WindowEvent e) {}
+					
+					@Override
+					public void windowIconified(WindowEvent e) {}
+					
+					@Override
+					public void windowDeiconified(WindowEvent e) {}
+					
+					@Override
+					public void windowDeactivated(WindowEvent e) {}
+					
+					@Override
+					public void windowClosing(WindowEvent e) {}
+					
+					@Override
+					public void windowClosed(WindowEvent e) {
+						if(satframe.j == 1) {
+							System.out.println("SesE");
+							
+						spacePanel.satList.add(
+								new	Body(satframe.pole_nazwy.getText(), Double.valueOf(satframe.pole_wagi.getText()), 
+										Double.valueOf(satframe.pole_ladunku.getText()), satframe.kol, Integer.valueOf(satframe.pole_wsp_X.getText()),
+										Integer.valueOf(satframe.pole_wsp_Y.getText()) ,Double.valueOf(satframe.pole_pred_X.getText()), Double.valueOf(satframe.pole_pred_Y.getText()), satframe.j)
+								);
+							
+							repaint();
+						}	
+					}
+					
+					@Override
+					public void windowActivated(WindowEvent e) {}
+				});
+				
+			}
+		});
 		
 		//menuPanel.add(addSatelite);
 		
@@ -211,20 +285,32 @@ public class SimFrame extends JFrame {
 		ActionListener startListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				 
+				
 				int j = 0;
 				
 				if(start.getText() == "Start") {
 					
+					
 					t.resume();
+					t2.resume();
 					start.setText("Stop");
 					j++;
 				}
 				
 				if(start.getText() == "Stop" && j == 0) {
 					
+					
 					t.suspend();
+					t2.suspend();
 					start.setText("Start");
+					/*
+					for(int i=0; i<spacePanel.smuga; i++) {
+						System.out.println("pozycja "+i);
+						System.out.println(spacePanel.pointBodyMatrix.get(1).get(i).x);
+						System.out.println(spacePanel.pointBodyMatrix.get(1).get(i).y);
+					}
+					System.out.println(spacePanel.counter);
+					*/
 				}
 				
 			}
@@ -272,6 +358,33 @@ public class SimFrame extends JFrame {
 		
 		this.add(spacePanel, BorderLayout.CENTER);
 		this.add(menuPanel, BorderLayout.LINE_END);
+		
+	}
+
+	@Override
+	public void run() {
+		while(true) {
+			try {
+				Thread.sleep(18/timeSlider.getValue());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			for(int i = 0; i < spacePanel.listBody.size(); i++) {
+				
+				if(bodies.getSelectedItem() == spacePanel.listBody.get(i).getName()) {
+				
+					mass.setText("Waga: " + spacePanel.listBody.get(i).getMass()); 
+					xx.setText("X: "+ spacePanel.listBody.get(i).getX()); 
+					yy.setText("Y: " + spacePanel.listBody.get(i).getY());
+					vxx.setText("Vy: " + spacePanel.listBody.get(i).getVx()); 
+					vyy.setText("Vx: " + spacePanel.listBody.get(i).getVy());
+					
+				}
+			}
+			
+			
+		}
 		
 	}
 }
